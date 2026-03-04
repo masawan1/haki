@@ -19,7 +19,7 @@
         h1 { color: #00f2fe; font-size: 3em; margin-bottom: 5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,242,254,0.5);}
         #judul-kota { font-size: 1.5em; color: #f9d423; margin-bottom: 20px; font-weight: bold; }
 
-        /* Layar Menu Utama (Pilih Kota) */
+        /* Layar Menu Utama */
         #layar-mulai {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(30, 30, 47, 0.98);
@@ -92,7 +92,7 @@
 <body>
 
     <div id="layar-mulai">
-        <div class="judul-menu">Pilih Misi Kasus HAKI</div>
+        <div class="judul-menu">PILIH MISI KASUS HAKI</div>
         <div class="menu-container">
             <button class="btn-kota" id="btn-kota-a" onclick="mulaiGame('A')">
                 KOTA A <span>(Kasus IT & Programmer)</span>
@@ -101,17 +101,15 @@
                 KOTA B <span>(Kasus Film & Broadcasting)</span>
             </button>
         </div>
-        <p style="margin-top: 30px; font-size: 1.2em; color: #a8b2d1;">Pastikan file musik.mp3 ada di folder yang sama!</p>
     </div>
 
     <script>
-        // 1. Inisialisasi Musik Latar
-        // Pastikan nama file audio sama persis huruf besar/kecilnya
-        let bgMusic = new Audio('musik.mp3'); 
+        // Musik Latar Streaming Online (Otomatis tanpa file MP3 lokal)
+        let bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); 
         bgMusic.loop = true;
-        bgMusic.volume = 0.15; // Volume 15% agar tidak menutupi suara guru saat menjelaskan
+        bgMusic.volume = 0.15; // Volume rendah agar suara guru tetap jelas
 
-        // 2. Inisialisasi Sound Effect (SFX) Drag & Drop
+        // Sound Effect Otomatis
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function mainkanSuara(tipe) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -186,10 +184,9 @@
         let kunciJawabanAktif = {};
 
         function mulaiGame(pilihanKota) {
-            // Aktifkan Audio Konteks
             if(audioCtx.state === 'suspended') audioCtx.resume();
             
-            // PUTAR MUSIK LATAR SAAT KOTA DIPILIH
+            // MUSIK AKAN JALAN DISINI SAAT TOMBOL DITEKAN
             bgMusic.play().catch(e => console.log("Menunggu interaksi pengguna untuk audio"));
 
             document.getElementById('layar-mulai').style.display = 'none';
@@ -212,6 +209,8 @@
         function kembaliKeMenu() {
             document.getElementById('layar-mulai').style.display = 'flex';
             document.getElementById('area-game').style.display = 'none';
+            // Opsional: Matikan musik saat kembali ke menu dengan menghapus tanda "//" di bawah
+            // bgMusic.pause();
         }
 
         const kartus = document.querySelectorAll('.kartu');

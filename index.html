@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Interaktif HAKI - SMK Informatika</title>
+    <script src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"></script>
     <style>
         /* Desain UI bergaya Modern Dark Mode cocok untuk TV Besar */
         body {
@@ -41,7 +42,7 @@
             cursor: grab;
             box-shadow: 0 8px 15px rgba(0,0,0,0.3);
             transition: transform 0.2s, box-shadow 0.3s;
-            border: 4px solid transparent;
+            border: 4px solid transparent; /* Border awal transparan */
         }
         .kartu:active { cursor: grabbing; transform: scale(1.1); }
         
@@ -82,34 +83,17 @@
             width: 100%;
         }
 
-        /* Tombol Cek dan Hasil */
-        .aksi-container { margin-top: 40px; }
-        button {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 2em;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
-            transition: transform 0.2s;
-        }
-        button:hover { transform: scale(1.05); }
-        button:active { transform: scale(0.95); }
-
         #pesan-hasil {
             font-size: 2.5em;
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 40px;
             height: 50px;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* Animasi Benar/Salah */
-        .benar { border-color: #43e97b !important; box-shadow: 0 0 20px #43e97b !important; }
-        .salah { border-color: #ff4e50 !important; box-shadow: 0 0 20px #ff4e50 !important; animation: getar 0.4s; }
+        /* Animasi Benar/Salah (Otomatis nyala) */
+        .benar { border-color: #43e97b !important; box-shadow: 0 0 25px #43e97b !important; }
+        .salah { border-color: #ff4e50 !important; box-shadow: 0 0 25px #ff4e50 !important; animation: getar 0.4s; }
 
         @keyframes getar {
             0% { transform: translateX(0); }
@@ -139,30 +123,33 @@
         <div class="kotak-kategori" id="desain"><h2>Desain Industri</h2></div>
     </div>
 
-    <div class="aksi-container">
-        <button onclick="cekJawaban()">CEK JAWABAN</button>
-        <div id="pesan-hasil"></div>
-    </div>
+    <div id="pesan-hasil"></div>
 
     <script>
-        // Logika Drag and Drop
         const kartus = document.querySelectorAll('.kartu');
         const kotaks = document.querySelectorAll('.kotak-kategori');
         const sumber = document.getElementById('sumber');
+        const pesan = document.getElementById('pesan-hasil');
 
         // Kunci Jawaban
         const kunciJawaban = {
-            'k1': 'hak-cipta',   // Source Code Aplikasi -> Hak Cipta
+            'k1': 'hak-cipta',   // Source Code -> Hak Cipta
             'k2': 'merek',       // Logo -> Merek
             'k3': 'paten',       // Algoritma AI -> Paten
             'k4': 'desain'       // Desain UI/UX -> Desain Industri
         };
 
+        // Event saat mulai ditarik
         kartus.forEach(kartu => {
-            kartu.addEventListener('dragstart', () => { kartu.classList.add('dragging'); });
-            kartu.addEventListener('dragend', () => { kartu.classList.remove('dragging'); });
+            kartu.addEventListener('dragstart', () => { 
+                kartu.classList.add('dragging'); 
+            });
+            kartu.addEventListener('dragend', () => { 
+                kartu.classList.remove('dragging'); 
+            });
         });
 
+        // Setup drop zone
         kotaks.forEach(kotak => setDropZone(kotak));
         setDropZone(sumber);
 
@@ -171,51 +158,51 @@
                 e.preventDefault();
                 zona.classList.add('drag-over');
             });
-            zona.addEventListener('dragleave', () => { zona.classList.remove('drag-over'); });
+            zona.addEventListener('dragleave', () => { 
+                zona.classList.remove('drag-over'); 
+            });
+            
+            // Event saat kartu dilepas di kotak
             zona.addEventListener('drop', e => {
                 e.preventDefault();
                 zona.classList.remove('drag-over');
                 const draggedElement = document.querySelector('.dragging');
+                
                 if (draggedElement) {
                     zona.appendChild(draggedElement);
-                    // Reset status warna jika dipindah lagi
-                    draggedElement.classList.remove('benar', 'salah');
-                    document.getElementById('pesan-hasil').innerHTML = '';
+                    
+                    // PENGECEKAN OTOMATIS SAAT DILEPAS
+                    if (zona.id !== 'sumber') {
+                        // Jika ditaruh di kotak jawaban
+                        if (zona.id === kunciJawaban[draggedElement.id]) {
+                            draggedElement.classList.add('benar');
+                            draggedElement.classList.remove('salah');
+                        } else {
+                            draggedElement.classList.add('salah');
+                            draggedElement.classList.remove('benar');
+                        }
+                    } else {
+                        // Jika dikembalikan ke atas, warnanya dinetralkan
+                        draggedElement.classList.remove('benar', 'salah');
+                    }
+
+                    cekSemuaSelesai();
                 }
             });
         }
 
-        function cekJawaban() {
-            let skor = 0;
-            let totalTerjawab = 0;
+        function cekSemuaSelesai() {
+            let skorBenar = document.querySelectorAll('.benar').length;
+            let totalTerjawab = document.querySelectorAll('.kategori-container .kartu').length;
 
-            kartus.forEach(kartu => {
-                // Cek apakah kartu sudah dipindah dari kotak sumber
-                if (kartu.parentElement.id !== 'sumber') {
-                    totalTerjawab++;
-                    // Cek benar/salah
-                    if (kartu.parentElement.id === kunciJawaban[kartu.id]) {
-                        kartu.classList.add('benar');
-                        kartu.classList.remove('salah');
-                        skor++;
-                    } else {
-                        kartu.classList.add('salah');
-                        kartu.classList.remove('benar');
-                    }
-                }
-            });
-
-            const pesan = document.getElementById('pesan-hasil');
-            
-            if (totalTerjawab < 4) {
-                pesan.style.color = "#f9d423";
-                pesan.innerHTML = "⚠️ Masukkan semua kartu terlebih dahulu!";
-            } else if (skor === 4) {
+            if (totalTerjawab === 4 && skorBenar === 4) {
                 pesan.style.color = "#43e97b";
                 pesan.innerHTML = "🎉 LUAR BIASA! Semua Jawaban Benar! 🎉";
-            } else {
+            } else if (totalTerjawab === 4) {
                 pesan.style.color = "#ff758c";
-                pesan.innerHTML = `🔥 Terjawab Benar: ${skor} dari 4. Ayo perbaiki yang merah! 🔥`;
+                pesan.innerHTML = "🔥 Masih ada yang salah. Ayo perbaiki yang merah! 🔥";
+            } else {
+                pesan.innerHTML = ""; // Kosongkan pesan jika belum selesai
             }
         }
     </script>

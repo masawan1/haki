@@ -3,336 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembelajaran Interaktif HAKI - SMK Informatika</title>
+    <title>HAKI Kreator Hub - SMK Informatika</title>
     <script src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1e2f;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            user-select: none;
-            overflow: hidden;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e2f; color: white; text-align: center; margin: 0; padding: 20px; user-select: none; overflow: hidden; }
         h1 { color: #00f2fe; font-size: 3em; margin-bottom: 5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,242,254,0.5);}
         #judul-kota { font-size: 1.5em; color: #f9d423; margin-bottom: 20px; font-weight: bold; }
 
-        /* --- 1. LAYAR INFOGRAFIS MATERI (TAMPIL PERTAMA KALI) --- */
-        #layar-materi {
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #1e1e2f; z-index: 999; padding: 20px; box-sizing: border-box;
-            overflow-y: auto;
-        }
+        /* --- LAYAR MENU UTAMA --- */
+        #layar-menu-utama { display: flex; flex-direction: column; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(30, 30, 47, 0.98); z-index: 1000; }
+        .judul-menu { font-size: 4em; color: #64ffda; margin-bottom: 40px; text-transform: uppercase; text-shadow: 0 0 20px rgba(100,255,218,0.5);}
+        .menu-container { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; max-width: 1200px;}
+        .btn-menu { border: 4px solid; color: white; padding: 30px 40px; font-size: 1.8em; font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 300px; }
+        .btn-menu:hover { transform: scale(1.05); }
+        .btn-menu span { font-size: 0.6em; color: #e2e8f0; font-weight: normal; text-align: center;}
+        
+        #btn-menu-materi { background: #1e1e2f; border-color: #f9d423; box-shadow: 0 10px 30px rgba(249, 212, 35, 0.3); }
+        #btn-menu-drag { background: #1e1e2f; border-color: #00f2fe; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3); }
+        #btn-menu-balap { background: #1e1e2f; border-color: #b224ef; box-shadow: 0 10px 30px rgba(178, 36, 239, 0.3); }
+
+        /* --- LAYAR MATERI --- */
+        #layar-materi { display: none; flex-direction: column; justify-content: flex-start; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1e1e2f; z-index: 900; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .judul-materi { font-size: 3em; color: #f9d423; margin-bottom: 5px; text-shadow: 0 0 15px rgba(249, 212, 35, 0.4);}
         .sub-materi { font-size: 1.2em; color: #a8b2d1; margin-bottom: 20px; }
-
-        .kartu-materi-container {
-            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;
-            max-width: 1200px;
-        }
-
-        /* Efek Balik (Flip 3D) untuk TV Sentuh */
-        .flip-card {
-            background-color: transparent; width: 240px; height: 300px;
-            perspective: 1000px; cursor: pointer;
-        }
-        .flip-card-inner {
-            position: relative; width: 100%; height: 100%; text-align: center;
-            transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d;
-        }
+        .kartu-materi-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; max-width: 1200px; }
+        .flip-card { background-color: transparent; width: 240px; height: 300px; perspective: 1000px; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.is-flipped .flip-card-inner { transform: rotateY(180deg); }
-        
-        .flip-card-front, .flip-card-back {
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-            border-radius: 20px; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; padding: 15px; box-sizing: border-box; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,255,255,0.1);
-        }
-        
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); }
         .flip-card-front { background: linear-gradient(135deg, #2a2a40 0%, #1e1e2f 100%); }
         .flip-card-front h2 { font-size: 1.6em; color: #00f2fe; margin-top: 15px;}
         .icon-besar { font-size: 3.5em; }
-
-        .flip-card-back {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: #1e1e2f; transform: rotateY(180deg);
-        }
+        .flip-card-back { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: #1e1e2f; transform: rotateY(180deg); }
         .flip-card-back h3 { font-size: 1.5em; margin: 0 0 10px 0; border-bottom: 2px solid #1e1e2f; padding-bottom: 5px;}
         .flip-card-back p { font-size: 1.1em; font-weight: bold; margin: 0; line-height: 1.3;}
         .flip-card-back .contoh { background: rgba(0,0,0,0.1); padding: 10px; border-radius: 10px; margin-top: 15px; font-size: 0.9em; font-style: italic;}
 
-        .btn-lanjut-game {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: white; border: none;
-            padding: 15px 40px; font-size: 1.8em; border-radius: 50px; cursor: pointer; font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4); transition: 0.3s;
-        }
-        .btn-lanjut-game:hover { transform: scale(1.05); }
-
-        /* --- 2. LAYAR MENU PILIH KOTA --- */
-        #layar-menu-kota {
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(30, 30, 47, 0.98); z-index: 900;
-        }
-        .judul-menu { font-size: 3.5em; color: #64ffda; margin-bottom: 40px; text-transform: uppercase; text-shadow: 0 0 20px rgba(100,255,218,0.5);}
-        .menu-container { display: flex; gap: 40px; }
-        
-        .btn-kota {
-            background: #2a2a40; border: 4px solid; color: white;
-            padding: 40px 60px; font-size: 2em; font-weight: bold;
-            border-radius: 30px; cursor: pointer; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center; gap: 10px; width: 350px;
-        }
+        /* --- LAYAR MENU KOTA (4 PILIHAN) --- */
+        #layar-menu-kota { display: none; flex-direction: column; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(30, 30, 47, 0.98); z-index: 900; }
+        .grid-kota { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;}
+        .btn-kota { background: #2a2a40; border: 4px solid; color: white; padding: 30px 40px; font-size: 1.8em; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 320px; }
         .btn-kota:hover { transform: scale(1.05); }
         .btn-kota span { font-size: 0.5em; color: #a8b2d1; font-weight: normal;}
-        
-        #btn-kota-a { border-color: #00f2fe; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3); }
-        #btn-kota-b { border-color: #ff758c; box-shadow: 0 10px 30px rgba(255, 117, 140, 0.3); }
+        #btn-kota-a { border-color: #00f2fe; } 
+        #btn-kota-b { border-color: #ff758c; }
+        #btn-kota-c { border-color: #43e97b; } 
+        #btn-kota-d { border-color: #f9d423; }
 
-        .btn-navigasi-kecil {
-            margin-top: 40px; background: transparent; color: #a8b2d1; border: 2px solid #a8b2d1;
-            padding: 10px 30px; font-size: 1.2em; border-radius: 15px; cursor: pointer; transition: 0.3s;
-        }
-        .btn-navigasi-kecil:hover { background: #a8b2d1; color: #1e1e2f; }
-
-        /* --- 3. AREA GAME --- */
+        /* --- AREA GAME DRAG DROP --- */
         #area-game { display: none; padding-top: 20px; }
-
-        .kartu-container {
-            display: flex; justify-content: center; gap: 20px; margin-bottom: 30px;
-            flex-wrap: wrap; padding: 20px; background-color: #252538;
-            border-radius: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); min-height: 80px;
-        }
-
-        .kartu {
-            padding: 15px 25px; border-radius: 15px; font-size: 1.4em; font-weight: bold;
-            cursor: grab; box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-            border: 4px solid transparent; transition: transform 0.2s;
-        }
+        .kartu-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; padding: 20px; background-color: #252538; border-radius: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); min-height: 80px; }
+        .kartu { padding: 15px 25px; border-radius: 15px; font-size: 1.4em; font-weight: bold; cursor: grab; box-shadow: 0 8px 15px rgba(0,0,0,0.3); border: 4px solid transparent; transition: transform 0.2s; }
         .kartu:active { cursor: grabbing; transform: scale(1.1); }
         .c1 { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; }
         .c2 { background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%); color: white; }
         .c3 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #1e1e2f; }
         .c4 { background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%); color: white; }
-
         .kategori-container { display: flex; justify-content: space-around; gap: 15px; }
-        .kotak-kategori {
-            width: 23%; min-height: 250px; background-color: #2a2a40;
-            border: 4px dashed #64ffda; border-radius: 20px; padding: 15px;
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: 0.3s;
-        }
+        .kotak-kategori { width: 23%; min-height: 250px; background-color: #2a2a40; border: 4px dashed #64ffda; border-radius: 20px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: 0.3s; }
         .kotak-kategori.drag-over { background-color: #3d3d5c; border-color: #00f2fe; }
         .kotak-kategori h2 { color: #64ffda; font-size: 1.8em; margin-top: 0; border-bottom: 2px solid #64ffda; padding-bottom: 10px; width: 100%; }
 
-        #pesan-hasil { font-size: 2.5em; font-weight: bold; margin-top: 20px; height: 50px; }
+        /* --- AREA LEADERBOARD (KLASEMEN BALAP) --- */
+        #layar-leaderboard { display: none; flex-direction: column; justify-content: flex-start; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1e1e2f; z-index: 900; padding: 40px; box-sizing: border-box; }
+        .papan-balap { width: 90%; max-width: 900px; height: 450px; background: #252538; border-radius: 20px; position: relative; padding: 20px 0; border: 4px solid #b224ef; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); margin-bottom: 30px;}
+        .bar-siswa { position: absolute; left: 20px; height: 60px; border-radius: 30px; display: flex; align-items: center; padding: 0 20px; font-size: 1.5em; font-weight: bold; color: white; transition: top 0.6s cubic-bezier(0.4, 0, 0.2, 1), width 0.6s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; overflow: hidden;}
+        
+        /* Warna Bar Siswa */
+        #bar-1 { background: linear-gradient(90deg, #ff758c, #ff7eb3); }
+        #bar-2 { background: linear-gradient(90deg, #f9d423, #ff4e50); }
+        #bar-3 { background: linear-gradient(90deg, #43e97b, #38f9d7); color: #1e1e2f; }
+        #bar-4 { background: linear-gradient(90deg, #00f2fe, #4facfe); }
+        #bar-5 { background: linear-gradient(90deg, #b224ef, #7579ff); }
 
-        .benar { border-color: #43e97b !important; box-shadow: 0 0 25px #43e97b !important; }
-        .salah { border-color: #ff4e50 !important; box-shadow: 0 0 25px #ff4e50 !important; animation: getar 0.4s; }
-        @keyframes getar {
-            0%, 100% { transform: translateX(0); }
-            25%, 75% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-        }
+        .nilai-teks { margin-left: auto; background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 15px; font-family: monospace; }
+        .btn-pantau { background: #b224ef; color: white; border: none; padding: 15px 40px; font-size: 1.8em; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 10px 20px rgba(178, 36, 239, 0.4); }
+        .btn-pantau:hover { transform: scale(1.05); }
+
+        /* --- UTILITAS --- */
+        #pesan-hasil { font-size: 2.5em; font-weight: bold; margin-top: 20px; height: 50px; }
+        .btn-navigasi-kecil { margin-top: 20px; background: transparent; color: #a8b2d1; border: 2px solid #a8b2d1; padding: 15px 40px; font-size: 1.5em; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .btn-navigasi-kecil:hover { background: #a8b2d1; color: #1e1e2f; }
+        .benar { border-color: #43e97b !important; box-shadow: 0 0 30px #43e97b !important; }
+        .salah { border-color: #ff4e50 !important; box-shadow: 0 0 30px #ff4e50 !important; animation: getar 0.4s; }
+        @keyframes getar { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-15px); } 50% { transform: translateX(15px); } }
     </style>
 </head>
 <body>
 
+    <div id="layar-menu-utama">
+        <div class="judul-menu">HAKI KREATOR HUB</div>
+        <div class="menu-container">
+            <button class="btn-menu" id="btn-menu-materi" onclick="bukaLayar('layar-materi')">
+                📖 MATERI HAKI
+                <span>(Buku Saku Digital)</span>
+            </button>
+            <button class="btn-menu" id="btn-menu-drag" onclick="bukaLayar('layar-menu-kota')">
+                🧩 GAME MISI
+                <span>(Pilih 4 Kota Penugasan)</span>
+            </button>
+            <button class="btn-menu" id="btn-menu-balap" onclick="bukaLayar('layar-leaderboard')">
+                🏆 LIVE KLASEMEN
+                <span>(Pantau Nilai Siswa)</span>
+            </button>
+        </div>
+    </div>
+
     <div id="layar-materi">
         <h1 class="judul-materi">BUKU SAKU HAKI KREATOR</h1>
-        <p class="sub-materi">Sentuh layar TV pada kartu di bawah ini untuk membalik dan mempelajari jenis HAKI!</p>
-        
+        <p class="sub-materi">Sentuh layar TV pada kartu di bawah ini untuk membalik dan mempelajari isinya!</p>
         <div class="kartu-materi-container">
-            <div class="flip-card" onclick="flipKartu(this)">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div class="icon-besar">📝</div>
-                        <h2>HAK CIPTA</h2>
-                    </div>
-                    <div class="flip-card-back">
-                        <h3>Hak Cipta (©️)</h3>
-                        <p>Melindungi "Karya Fisik/Digital" yang sudah dibuat wujudnya.</p>
-                        <div class="contoh">💻 Source Code Aplikasi<br>🎬 Naskah Film</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flip-card" onclick="flipKartu(this)">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front" style="border-color: #f9d423;">
-                        <div class="icon-besar">🏷️</div>
-                        <h2 style="color: #f9d423;">MEREK</h2>
-                    </div>
-                    <div class="flip-card-back" style="background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%); color: white;">
-                        <h3 style="border-bottom-color: white;">Merek (™️)</h3>
-                        <p>Melindungi "Identitas Bisnis" agar tidak dipalsukan.</p>
-                        <div class="contoh" style="background: rgba(255,255,255,0.2);">🏢 Nama Production House<br>🍎 Logo Brand Startup</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flip-card" onclick="flipKartu(this)">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front" style="border-color: #43e97b;">
-                        <div class="icon-besar">⚙️</div>
-                        <h2 style="color: #43e97b;">PATEN</h2>
-                    </div>
-                    <div class="flip-card-back" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                        <h3>Paten (💡)</h3>
-                        <p>Melindungi "Inovasi Teknologi" atau cara kerja mesin yang BARU.</p>
-                        <div class="contoh">🤖 Algoritma AI Baru<br>🎥 Teknologi Penstabil Kamera</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flip-card" onclick="flipKartu(this)">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front" style="border-color: #b224ef;">
-                        <div class="icon-besar">📱</div>
-                        <h2 style="color: #b224ef;">DESAIN IND.</h2>
-                    </div>
-                    <div class="flip-card-back" style="background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%); color: white;">
-                        <h3 style="border-bottom-color: white;">Desain Industri</h3>
-                        <p>Melindungi "Estetika/Tampilan" dari sebuah produk.</p>
-                        <div class="contoh" style="background: rgba(255,255,255,0.2);">🎨 Desain UI/UX Web<br>📷 Bentuk Fisik Body Kamera</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flip-card" onclick="flipKartu(this)">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front" style="border-color: #ff9a9e;">
-                        <div class="icon-besar">🔐</div>
-                        <h2 style="color: #ff9a9e;">RAHASIA DAGANG</h2>
-                    </div>
-                    <div class="flip-card-back" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #1e1e2f;">
-                        <h3 style="border-bottom-color: #1e1e2f;">Rahasia Dagang</h3>
-                        <p>Informasi bisnis/teknologi yang dirahasiakan & bernilai ekonomi.</p>
-                        <div class="contoh">🤫 Algoritma Mesin Pencari<br>🍗 Resep Bumbu Restoran</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flip-card" onclick="flipKartu(this)">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front" style="border-color: #a18cd1;">
-                        <div class="icon-besar">🌐</div>
-                        <h2 style="color: #a18cd1;">LISENSI OPEN</h2>
-                    </div>
-                    <div class="flip-card-back" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #1e1e2f;">
-                        <h3 style="border-bottom-color: #1e1e2f;">Lisensi Digital</h3>
-                        <p>Izin penggunaan karya digital (Software/Video) secara gratis/terbatas.</p>
-                        <div class="contoh">🌐 MIT License (di GitHub)<br>🎥 Creative Commons (CC)</div>
-                    </div>
-                </div>
-            </div>
+            <div class="flip-card" onclick="flipKartu(this)"><div class="flip-card-inner"><div class="flip-card-front"><div class="icon-besar">📝</div><h2>HAK CIPTA</h2></div><div class="flip-card-back"><h3>Hak Cipta (©️)</h3><p>Melindungi "Karya Fisik/Digital" yang sudah dibuat wujudnya.</p><div class="contoh">💻 Source Code Aplikasi<br>🎬 Naskah Film</div></div></div></div>
+            <div class="flip-card" onclick="flipKartu(this)"><div class="flip-card-inner"><div class="flip-card-front" style="border-color: #f9d423;"><div class="icon-besar">🏷️</div><h2 style="color: #f9d423;">MEREK</h2></div><div class="flip-card-back" style="background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%); color: white;"><h3 style="border-bottom-color: white;">Merek (™️)</h3><p>Melindungi "Identitas Bisnis" agar tidak dipalsukan.</p><div class="contoh" style="background: rgba(255,255,255,0.2);">🏢 Nama Production House<br>🍎 Logo Brand Startup</div></div></div></div>
+            <div class="flip-card" onclick="flipKartu(this)"><div class="flip-card-inner"><div class="flip-card-front" style="border-color: #43e97b;"><div class="icon-besar">⚙️</div><h2 style="color: #43e97b;">PATEN</h2></div><div class="flip-card-back" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"><h3>Paten (💡)</h3><p>Melindungi "Inovasi Teknologi" atau cara kerja mesin BARU.</p><div class="contoh">🤖 Algoritma AI Baru<br>🎥 Alat Penstabil Kamera</div></div></div></div>
+            <div class="flip-card" onclick="flipKartu(this)"><div class="flip-card-inner"><div class="flip-card-front" style="border-color: #b224ef;"><div class="icon-besar">📱</div><h2 style="color: #b224ef;">DESAIN IND.</h2></div><div class="flip-card-back" style="background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%); color: white;"><h3 style="border-bottom-color: white;">Desain Industri</h3><p>Melindungi "Estetika/Tampilan" dari sebuah produk.</p><div class="contoh" style="background: rgba(255,255,255,0.2);">🎨 Desain UI/UX Web<br>📷 Bentuk Fisik Kamera</div></div></div></div>
+            <div class="flip-card" onclick="flipKartu(this)"><div class="flip-card-inner"><div class="flip-card-front" style="border-color: #ff9a9e;"><div class="icon-besar">🔐</div><h2 style="color: #ff9a9e;">RAHASIA DAGANG</h2></div><div class="flip-card-back" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #1e1e2f;"><h3 style="border-bottom-color: #1e1e2f;">Rahasia Dagang</h3><p>Informasi bisnis/teknologi yang dirahasiakan & bernilai.</p><div class="contoh">🤫 Algoritma Mesin Pencari<br>🍗 Resep Bumbu Restoran</div></div></div></div>
+            <div class="flip-card" onclick="flipKartu(this)"><div class="flip-card-inner"><div class="flip-card-front" style="border-color: #a18cd1;"><div class="icon-besar">🌐</div><h2 style="color: #a18cd1;">LISENSI OPEN</h2></div><div class="flip-card-back" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #1e1e2f;"><h3 style="border-bottom-color: #1e1e2f;">Lisensi Digital</h3><p>Izin penggunaan karya digital secara gratis/terbatas.</p><div class="contoh">🌐 MIT License (di GitHub)<br>🎥 Creative Commons (CC)</div></div></div></div>
         </div>
-        
-        <button class="btn-lanjut-game" onclick="lanjutKePilihKota()">LANJUT KE GAME 🎮</button>
+        <button class="btn-navigasi-kecil" onclick="bukaLayar('layar-menu-utama')" style="color:white; border-color:white;">⬅ KEMBALI KE DASHBOARD</button>
     </div>
 
     <div id="layar-menu-kota">
-        <div class="judul-menu">PILIH MISI EVALUASI</div>
-        <div class="menu-container">
-            <button class="btn-kota" id="btn-kota-a" onclick="mulaiGame('A')">
-                KOTA A <span>(Kasus IT & Programmer)</span>
-            </button>
-            <button class="btn-kota" id="btn-kota-b" onclick="mulaiGame('B')">
-                KOTA B <span>(Kasus Film & Broadcasting)</span>
-            </button>
+        <div class="judul-menu">PILIH MISI DRAG & DROP</div>
+        <div class="grid-kota">
+            <button class="btn-kota" id="btn-kota-a" onclick="mulaiGameDrag('A')">KOTA A <span>(Kasus IT & Software)</span></button>
+            <button class="btn-kota" id="btn-kota-b" onclick="mulaiGameDrag('B')">KOTA B <span>(Kasus Film & TV)</span></button>
+            <button class="btn-kota" id="btn-kota-c" onclick="mulaiGameDrag('C')">KOTA C <span>(Kasus Coding & AI)</span></button>
+            <button class="btn-kota" id="btn-kota-d" onclick="mulaiGameDrag('D')">KOTA D <span>(Kasus Kreator TikTok)</span></button>
         </div>
-        <button class="btn-navigasi-kecil" onclick="kembaliKeMateri()">⬅ Kembali Baca Materi</button>
+        <button class="btn-navigasi-kecil" onclick="bukaLayar('layar-menu-utama')">⬅ Kembali ke Dashboard</button>
     </div>
 
     <div id="area-game">
-        <h1>Uji Konsentrasi HAKI</h1>
+        <h1>Misi Drag & Drop</h1>
         <div id="judul-kota">Sedang Mengerjakan: MISI KOTA ...</div>
         
         <div class="kartu-container" id="sumber">
-            <div class="kartu c1" draggable="true" id="k1">Kartu 1</div>
-            <div class="kartu c2" draggable="true" id="k2">Kartu 2</div>
-            <div class="kartu c3" draggable="true" id="k3">Kartu 3</div>
-            <div class="kartu c4" draggable="true" id="k4">Kartu 4</div>
+            <div class="kartu c1" draggable="true" id="k1">Kartu 1</div><div class="kartu c2" draggable="true" id="k2">Kartu 2</div>
+            <div class="kartu c3" draggable="true" id="k3">Kartu 3</div><div class="kartu c4" draggable="true" id="k4">Kartu 4</div>
         </div>
 
         <div class="kategori-container">
-            <div class="kotak-kategori" id="hak-cipta"><h2>Hak Cipta</h2></div>
-            <div class="kotak-kategori" id="merek"><h2>Merek</h2></div>
-            <div class="kotak-kategori" id="paten"><h2>Paten</h2></div>
-            <div class="kotak-kategori" id="desain"><h2>Desain Industri</h2></div>
+            <div class="kotak-kategori" id="hak-cipta"><h2>Hak Cipta</h2></div><div class="kotak-kategori" id="merek"><h2>Merek</h2></div>
+            <div class="kotak-kategori" id="paten"><h2>Paten</h2></div><div class="kotak-kategori" id="desain"><h2>Desain Industri</h2></div>
         </div>
 
         <div id="pesan-hasil"></div>
-        <button class="btn-navigasi-kecil" id="btn-kembali-game" onclick="lanjutKePilihKota()" style="display:none; border-color:#fff; color:#fff;">⬅ Pilih Kota Lain</button>
+        <button class="btn-navigasi-kecil" id="btn-kembali-game" onclick="bukaLayar('layar-menu-kota')" style="display:none; border-color:#fff; color:#fff;">⬅ Pilih Kota Lain</button>
+    </div>
+
+    <div id="layar-leaderboard">
+        <h1 style="color:#b224ef; margin-bottom: 5px;">KLASEMEN LIVE LKPD</h1>
+        <p style="color:#a8b2d1; font-size:1.2em; margin-bottom: 20px;">Pantau progress siswa secara real-time!</p>
+        
+        <div class="papan-balap" id="papan-balap">
+            </div>
+
+        <button class="btn-pantau" id="btn-mulai-balap" onclick="mulaiSimulasiBalap()">🚀 MULAI PANTAU NILAI</button>
+        <button class="btn-navigasi-kecil" style="display:block;" onclick="bukaLayar('layar-menu-utama')">⬅ Kembali ke Dashboard</button>
     </div>
 
     <script>
+        // --- 1. SISTEM AUDIO ---
         let bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); 
-        bgMusic.loop = true;
-        bgMusic.volume = 0.15;
-
+        bgMusic.loop = true; bgMusic.volume = 0.15;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function mainkanSuara(tipe) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
             
-            // --- SINTESIS SUARA "WUSSSHH" (EFEK ANGIN/FLIP) ---
             if(tipe === 'whoosh') {
-                const bufferSize = audioCtx.sampleRate * 0.4; // durasi 0.4 detik
+                const bufferSize = audioCtx.sampleRate * 0.4;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * 0.5; // Generate White Noise
-                }
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-
-                // Filter bandpass menyapu frekuensi untuk efek swoosh
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'bandpass';
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+                const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter(); filter.type = 'bandpass';
                 filter.frequency.setValueAtTime(200, audioCtx.currentTime);
                 filter.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.15);
                 filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.4);
-
-                // Volume fade in & fade out cepat
-                const gainNode = audioCtx.createGain();
-                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                const gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
                 gainNode.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 0.1);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-
-                noise.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                noise.start();
-                return; // Selesai untuk whoosh
+                noise.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination);
+                noise.start(); return;
             }
 
-            // --- SINTESIS SUARA LAINNYA ---
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
+            const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
             osc.connect(gainNode); gainNode.connect(audioCtx.destination);
             
             if(tipe === 'benar') {
                 osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(1318.51, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
                 osc.start(); osc.stop(audioCtx.currentTime + 0.5);
             } else if(tipe === 'salah') {
                 osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
                 osc.start(); osc.stop(audioCtx.currentTime + 0.3);
             } else if(tipe === 'menang') {
                 osc.type = 'square'; osc.frequency.setValueAtTime(440, audioCtx.currentTime);
                 osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.1);
                 osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2);
                 osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
                 osc.start(); osc.stop(audioCtx.currentTime + 1);
             }
         }
@@ -342,125 +217,163 @@
             bgMusic.play().catch(e => console.log("Menunggu interaksi"));
         }
 
-        // --- ANIMASI FLIP KARTU MATERI DENGAN SUARA WUSSH ---
-        function flipKartu(elemen) {
-            inisiasiAudio(); 
-            mainkanSuara('whoosh'); // MEMAINKAN EFEK WUSSH SAAT KARTU DIBALIK
-            elemen.classList.toggle('is-flipped');
-        }
-
-        // --- NAVIGASI ALUR ---
-        function lanjutKePilihKota() {
-            inisiasiAudio();
+        // --- 2. NAVIGASI LAYAR ---
+        function sembunyikanSemuaLayar() {
+            document.getElementById('layar-menu-utama').style.display = 'none';
             document.getElementById('layar-materi').style.display = 'none';
-            document.getElementById('area-game').style.display = 'none';
-            document.getElementById('layar-menu-kota').style.display = 'flex';
-        }
-
-        function kembaliKeMateri() {
             document.getElementById('layar-menu-kota').style.display = 'none';
-            document.getElementById('layar-materi').style.display = 'flex';
+            document.getElementById('area-game').style.display = 'none';
+            document.getElementById('layar-leaderboard').style.display = 'none';
         }
 
-        // --- LOGIKA GAME ---
-        const bankSoal = {
-            'A': {
-                nama: "MISI KOTA A (Kasus IT & Programmer)",
-                k1: { teks: "Source Code App Toko", jawaban: "hak-cipta" },
-                k2: { teks: "Logo Startup Tech", jawaban: "merek" },
-                k3: { teks: "Algoritma AI Pendeteksi", jawaban: "paten" },
-                k4: { teks: "Desain Antarmuka (UI) Web", jawaban: "desain" }
-            },
-            'B': {
-                nama: "MISI KOTA B (Kasus Film & Broadcasting)",
-                k1: { teks: "Naskah Skenario Film", jawaban: "hak-cipta" },
-                k2: { teks: "Nama Production House", jawaban: "merek" },
-                k3: { teks: "Sistem Hidrolik Gimbal", jawaban: "paten" },
-                k4: { teks: "Bentuk Bodi Lensa Kamera", jawaban: "desain" }
+        function bukaLayar(idLayar) {
+            inisiasiAudio(); sembunyikanSemuaLayar();
+            document.getElementById(idLayar).style.display = 'flex';
+            if(idLayar === 'area-game') document.getElementById(idLayar).style.display = 'block';
+            
+            // Hentikan simulasi balap jika keluar dari layar leaderboard
+            if(idLayar !== 'layar-leaderboard' && intervalBalap) {
+                clearInterval(intervalBalap);
+                document.getElementById('btn-mulai-balap').innerText = "🚀 MULAI PANTAU NILAI";
             }
+        }
+
+        function flipKartu(elemen) { inisiasiAudio(); mainkanSuara('whoosh'); elemen.classList.toggle('is-flipped'); }
+
+        // --- 3. LOGIKA GAME DRAG DROP (4 KOTA) ---
+        const bankSoalDrag = {
+            'A': { nama: "KOTA A (Software IT)", k1: { teks: "Source Code App", jawaban: "hak-cipta" }, k2: { teks: "Logo Startup Tech", jawaban: "merek" }, k3: { teks: "Sistem Database Baru", jawaban: "paten" }, k4: { teks: "Desain UI Web", jawaban: "desain" } },
+            'B': { nama: "KOTA B (Broadcasting)", k1: { teks: "Naskah Skenario", jawaban: "hak-cipta" }, k2: { teks: "Nama Prod. House", jawaban: "merek" }, k3: { teks: "Sistem Gimbal Kamera", jawaban: "paten" }, k4: { teks: "Bodi Lensa Kamera", jawaban: "desain" } },
+            'C': { nama: "KOTA C (Coding & AI)", k1: { teks: "Script Koding AI", jawaban: "hak-cipta" }, k2: { teks: "Logo Lab Robotika", jawaban: "merek" }, k3: { teks: "Algoritma Machine Learning", jawaban: "paten" }, k4: { teks: "Casing Robot Fisik", jawaban: "desain" } },
+            'D': { nama: "KOTA D (Konten TikTok)", k1: { teks: "Video Original Aesthetic", jawaban: "hak-cipta" }, k2: { teks: "Nama Channel Kreator", jawaban: "merek" }, k3: { teks: "Alat Penyangga Ringlight Baru", jawaban: "paten" }, k4: { teks: "Layout Etalase TikTok", jawaban: "desain" } }
         };
 
-        let kunciJawabanAktif = {};
+        let kunciJawabanDrag = {};
 
-        function mulaiGame(pilihanKota) {
-            inisiasiAudio();
-            document.getElementById('layar-menu-kota').style.display = 'none';
-            document.getElementById('area-game').style.display = 'block';
-            
+        function mulaiGameDrag(pilihanKota) {
+            bukaLayar('area-game');
             document.getElementById('btn-kembali-game').style.display = 'none';
             document.getElementById('pesan-hasil').innerHTML = '';
-            document.getElementById('judul-kota').innerText = bankSoal[pilihanKota].nama;
+            document.getElementById('judul-kota').innerText = "Misi: " + bankSoalDrag[pilihanKota].nama;
 
             const sumber = document.getElementById('sumber');
             for(let i=1; i<=4; i++) {
-                let idKartu = 'k' + i;
-                let elemenKartu = document.getElementById(idKartu);
-                elemenKartu.innerText = bankSoal[pilihanKota][idKartu].teks;
-                kunciJawabanAktif[idKartu] = bankSoal[pilihanKota][idKartu].jawaban;
-                elemenKartu.classList.remove('benar', 'salah');
-                sumber.appendChild(elemenKartu);
+                let idKartu = 'k' + i; let elemenKartu = document.getElementById(idKartu);
+                elemenKartu.innerText = bankSoalDrag[pilihanKota][idKartu].teks;
+                kunciJawabanDrag[idKartu] = bankSoalDrag[pilihanKota][idKartu].jawaban;
+                elemenKartu.classList.remove('benar', 'salah'); sumber.appendChild(elemenKartu);
             }
         }
 
-        // --- SISTEM DRAG & DROP ---
-        const kartus = document.querySelectorAll('.kartu');
-        const kotaks = document.querySelectorAll('.kotak-kategori');
-        const sumber = document.getElementById('sumber');
-        const pesan = document.getElementById('pesan-hasil');
-
-        kartus.forEach(kartu => {
-            kartu.addEventListener('dragstart', () => { kartu.classList.add('dragging'); });
-            kartu.addEventListener('dragend', () => { kartu.classList.remove('dragging'); });
-        });
-
-        kotaks.forEach(kotak => setDropZone(kotak));
-        setDropZone(sumber);
+        const kartus = document.querySelectorAll('.kartu'); const kotaks = document.querySelectorAll('.kotak-kategori'); const sumber = document.getElementById('sumber'); const pesan = document.getElementById('pesan-hasil');
+        kartus.forEach(kartu => { kartu.addEventListener('dragstart', () => { kartu.classList.add('dragging'); }); kartu.addEventListener('dragend', () => { kartu.classList.remove('dragging'); }); });
+        kotaks.forEach(kotak => setDropZone(kotak)); setDropZone(sumber);
 
         function setDropZone(zona) {
             zona.addEventListener('dragover', e => { e.preventDefault(); zona.classList.add('drag-over'); });
             zona.addEventListener('dragleave', () => { zona.classList.remove('drag-over'); });
             zona.addEventListener('drop', e => {
-                e.preventDefault();
-                zona.classList.remove('drag-over');
+                e.preventDefault(); zona.classList.remove('drag-over');
                 const draggedElement = document.querySelector('.dragging');
-                
                 if (draggedElement) {
                     zona.appendChild(draggedElement);
                     if (zona.id !== 'sumber') {
-                        if (zona.id === kunciJawabanAktif[draggedElement.id]) {
-                            draggedElement.classList.add('benar');
-                            draggedElement.classList.remove('salah');
-                            mainkanSuara('benar');
+                        if (zona.id === kunciJawabanDrag[draggedElement.id]) {
+                            draggedElement.classList.add('benar'); draggedElement.classList.remove('salah'); mainkanSuara('benar');
                         } else {
-                            draggedElement.classList.add('salah');
-                            draggedElement.classList.remove('benar');
-                            mainkanSuara('salah');
+                            draggedElement.classList.add('salah'); draggedElement.classList.remove('benar'); mainkanSuara('salah');
                         }
-                    } else {
-                        draggedElement.classList.remove('benar', 'salah');
-                    }
-                    cekSemuaSelesai();
+                    } else { draggedElement.classList.remove('benar', 'salah'); }
+                    cekSemuaSelesaiDrag();
                 }
             });
         }
 
-        function cekSemuaSelesai() {
+        function cekSemuaSelesaiDrag() {
             let skorBenar = document.querySelectorAll('.benar').length;
             let totalTerjawab = document.querySelectorAll('.area-game .kategori-container .kartu, #area-game .kotak-kategori .kartu').length;
-
             if (skorBenar === 4) {
-                pesan.style.color = "#43e97b";
-                pesan.innerHTML = "🎉 MISI SELESAI! Kalian Luar Biasa! 🎉";
-                setTimeout(() => mainkanSuara('menang'), 500);
-                document.getElementById('btn-kembali-game').style.display = 'inline-block';
+                pesan.style.color = "#43e97b"; pesan.innerHTML = "🎉 MISI SELESAI! Mantap Sekali! 🎉";
+                setTimeout(() => mainkanSuara('menang'), 500); document.getElementById('btn-kembali-game').style.display = 'inline-block';
             } else if (document.querySelectorAll('.salah').length > 0) {
-                pesan.style.color = "#ff758c";
-                pesan.innerHTML = "🔥 Masih ada yang salah. Ayo perbaiki! 🔥";
+                pesan.style.color = "#ff758c"; pesan.innerHTML = "🔥 Masih ada yang salah. Ayo perbaiki! 🔥";
                 document.getElementById('btn-kembali-game').style.display = 'none';
-            } else {
-                pesan.innerHTML = ""; 
-                document.getElementById('btn-kembali-game').style.display = 'none';
+            } else { pesan.innerHTML = ""; document.getElementById('btn-kembali-game').style.display = 'none'; }
+        }
+
+        // --- 4. LOGIKA SIMULASI LEADERBOARD BALAPAN ---
+        let dataSiswa = [
+            { id: 'bar-1', nama: "Kelompok 1", nilai: 0 },
+            { id: 'bar-2', nama: "Kelompok 2", nilai: 0 },
+            { id: 'bar-3', nama: "Kelompok 3", nilai: 0 },
+            { id: 'bar-4', nama: "Kelompok 4", nilai: 0 },
+            { id: 'bar-5', nama: "Kelompok 5", nilai: 0 }
+        ];
+
+        let intervalBalap = null;
+
+        // Inisialisasi tampilan awal papan
+        function renderPapanAwal() {
+            const papan = document.getElementById('papan-balap');
+            papan.innerHTML = '';
+            dataSiswa.forEach((siswa, index) => {
+                let div = document.createElement('div');
+                div.className = 'bar-siswa';
+                div.id = siswa.id;
+                div.style.top = (index * 80 + 20) + 'px';
+                div.style.width = '20%'; // Lebar awal
+                
+                div.innerHTML = `${siswa.nama} <span class="nilai-teks" id="nilai-${siswa.id}">0</span>`;
+                papan.appendChild(div);
+            });
+        }
+        renderPapanAwal();
+
+        function mulaiSimulasiBalap() {
+            const btn = document.getElementById('btn-mulai-balap');
+            
+            if(intervalBalap) {
+                // Hentikan simulasi
+                clearInterval(intervalBalap);
+                intervalBalap = null;
+                btn.innerText = "🚀 LANJUT PANTAU";
+                return;
             }
+
+            btn.innerText = "🛑 JEDA PANTAUAN";
+            mainkanSuara('whoosh');
+
+            intervalBalap = setInterval(() => {
+                // Tambah nilai secara acak untuk efek balap
+                dataSiswa.forEach(siswa => {
+                    let tambah = Math.floor(Math.random() * 15);
+                    siswa.nilai += tambah;
+                    if(siswa.nilai > 1000) siswa.nilai = 1000; // Cap limit
+                });
+
+                // Urutkan berdasarkan nilai tertinggi
+                let sortedData = [...dataSiswa].sort((a, b) => b.nilai - a.nilai);
+
+                // Update posisi (Top) dan panjang (Width) di layar
+                sortedData.forEach((siswa, index) => {
+                    let elemenBar = document.getElementById(siswa.id);
+                    let teksNilai = document.getElementById(`nilai-${siswa.id}`);
+                    
+                    // Update Angka
+                    teksNilai.innerText = siswa.nilai;
+                    
+                    // Update Panjang Bar (Min 20%, Max 90%)
+                    let persentase = 20 + (siswa.nilai / 1000 * 70);
+                    elemenBar.style.width = persentase + '%';
+                    
+                    // Update Posisi Y (Balapan naik/turun)
+                    elemenBar.style.top = (index * 80 + 20) + 'px';
+                });
+                
+                // Pancing suara TING kecil kadang-kadang saat ada yang menyalip
+                if(Math.random() > 0.7) mainkanSuara('benar');
+
+            }, 1000); // Update setiap 1 detik
         }
     </script>
 </body>

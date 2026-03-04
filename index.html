@@ -13,25 +13,26 @@
             text-align: center;
             margin: 0;
             padding: 30px;
-            user-select: none; /* Mencegah teks terblok saat disentuh */
+            user-select: none;
         }
         h1 { color: #00f2fe; font-size: 3.5em; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;}
-        p { font-size: 1.5em; color: #a8b2d1; margin-bottom: 40px; }
+        p { font-size: 1.5em; color: #a8b2d1; margin-bottom: 30px; }
 
         /* Area Tempat Kartu Awal */
         .kartu-container {
             display: flex;
             justify-content: center;
             gap: 25px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
             padding: 30px;
             background-color: #252538;
             border-radius: 20px;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            min-height: 80px;
         }
 
-        /* Desain Kartu yang Bisa Digerakkan */
+        /* Desain Kartu */
         .kartu {
             padding: 20px 30px;
             border-radius: 15px;
@@ -39,15 +40,15 @@
             font-weight: bold;
             cursor: grab;
             box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.3s;
+            border: 4px solid transparent;
         }
         .kartu:active { cursor: grabbing; transform: scale(1.1); }
         
-        /* Warna-warni Kartu */
-        .c1 { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; } /* Merah Muda */
-        .c2 { background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%); color: white; } /* Oranye */
-        .c3 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #1e1e2f; } /* Hijau */
-        .c4 { background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%); color: white; } /* Ungu */
+        .c1 { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; }
+        .c2 { background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%); color: white; }
+        .c3 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #1e1e2f; }
+        .c4 { background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%); color: white; }
 
         /* Area Kotak Kategori (Drop Zone) */
         .kategori-container {
@@ -66,13 +67,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             transition: background-color 0.3s;
         }
-        .kotak-kategori.drag-over {
-            background-color: #3d3d5c;
-            border-color: #00f2fe;
-        }
+        .kotak-kategori.drag-over { background-color: #3d3d5c; border-color: #00f2fe; }
+        
         .kotak-kategori h2 {
             color: #64ffda;
             font-size: 2.2em;
@@ -81,12 +81,49 @@
             padding-bottom: 10px;
             width: 100%;
         }
+
+        /* Tombol Cek dan Hasil */
+        .aksi-container { margin-top: 40px; }
+        button {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 2em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+        button:active { transform: scale(0.95); }
+
+        #pesan-hasil {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-top: 20px;
+            height: 50px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Animasi Benar/Salah */
+        .benar { border-color: #43e97b !important; box-shadow: 0 0 20px #43e97b !important; }
+        .salah { border-color: #ff4e50 !important; box-shadow: 0 0 20px #ff4e50 !important; animation: getar 0.4s; }
+
+        @keyframes getar {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
 
     <h1>Uji Konsentrasi: Kasus HAKI</h1>
-    <p>Sentuh dan geser kartu kasus di bawah ini ke kotak kategori HAKI yang tepat!</p>
+    <p>Sentuh dan geser kartu kasus ke kotak kategori HAKI yang tepat!</p>
 
     <div class="kartu-container" id="sumber">
         <div class="kartu c1" draggable="true" id="k1">Source Code Aplikasi</div>
@@ -96,18 +133,15 @@
     </div>
 
     <div class="kategori-container">
-        <div class="kotak-kategori" id="hak-cipta">
-            <h2>Hak Cipta</h2>
-        </div>
-        <div class="kotak-kategori" id="merek">
-            <h2>Merek</h2>
-        </div>
-        <div class="kotak-kategori" id="paten">
-            <h2>Paten</h2>
-        </div>
-        <div class="kotak-kategori" id="desain">
-            <h2>Desain Industri</h2>
-        </div>
+        <div class="kotak-kategori" id="hak-cipta"><h2>Hak Cipta</h2></div>
+        <div class="kotak-kategori" id="merek"><h2>Merek</h2></div>
+        <div class="kotak-kategori" id="paten"><h2>Paten</h2></div>
+        <div class="kotak-kategori" id="desain"><h2>Desain Industri</h2></div>
+    </div>
+
+    <div class="aksi-container">
+        <button onclick="cekJawaban()">CEK JAWABAN</button>
+        <div id="pesan-hasil"></div>
     </div>
 
     <script>
@@ -116,16 +150,19 @@
         const kotaks = document.querySelectorAll('.kotak-kategori');
         const sumber = document.getElementById('sumber');
 
+        // Kunci Jawaban
+        const kunciJawaban = {
+            'k1': 'hak-cipta',   // Source Code Aplikasi -> Hak Cipta
+            'k2': 'merek',       // Logo -> Merek
+            'k3': 'paten',       // Algoritma AI -> Paten
+            'k4': 'desain'       // Desain UI/UX -> Desain Industri
+        };
+
         kartus.forEach(kartu => {
-            kartu.addEventListener('dragstart', () => {
-                kartu.classList.add('dragging');
-            });
-            kartu.addEventListener('dragend', () => {
-                kartu.classList.remove('dragging');
-            });
+            kartu.addEventListener('dragstart', () => { kartu.classList.add('dragging'); });
+            kartu.addEventListener('dragend', () => { kartu.classList.remove('dragging'); });
         });
 
-        // Menambahkan kotak sumber agar kartu bisa dikembalikan
         kotaks.forEach(kotak => setDropZone(kotak));
         setDropZone(sumber);
 
@@ -134,19 +171,52 @@
                 e.preventDefault();
                 zona.classList.add('drag-over');
             });
-
-            zona.addEventListener('dragleave', () => {
-                zona.classList.remove('drag-over');
-            });
-
+            zona.addEventListener('dragleave', () => { zona.classList.remove('drag-over'); });
             zona.addEventListener('drop', e => {
                 e.preventDefault();
                 zona.classList.remove('drag-over');
                 const draggedElement = document.querySelector('.dragging');
                 if (draggedElement) {
                     zona.appendChild(draggedElement);
+                    // Reset status warna jika dipindah lagi
+                    draggedElement.classList.remove('benar', 'salah');
+                    document.getElementById('pesan-hasil').innerHTML = '';
                 }
             });
+        }
+
+        function cekJawaban() {
+            let skor = 0;
+            let totalTerjawab = 0;
+
+            kartus.forEach(kartu => {
+                // Cek apakah kartu sudah dipindah dari kotak sumber
+                if (kartu.parentElement.id !== 'sumber') {
+                    totalTerjawab++;
+                    // Cek benar/salah
+                    if (kartu.parentElement.id === kunciJawaban[kartu.id]) {
+                        kartu.classList.add('benar');
+                        kartu.classList.remove('salah');
+                        skor++;
+                    } else {
+                        kartu.classList.add('salah');
+                        kartu.classList.remove('benar');
+                    }
+                }
+            });
+
+            const pesan = document.getElementById('pesan-hasil');
+            
+            if (totalTerjawab < 4) {
+                pesan.style.color = "#f9d423";
+                pesan.innerHTML = "⚠️ Masukkan semua kartu terlebih dahulu!";
+            } else if (skor === 4) {
+                pesan.style.color = "#43e97b";
+                pesan.innerHTML = "🎉 LUAR BIASA! Semua Jawaban Benar! 🎉";
+            } else {
+                pesan.style.color = "#ff758c";
+                pesan.innerHTML = `🔥 Terjawab Benar: ${skor} dari 4. Ayo perbaiki yang merah! 🔥`;
+            }
         }
     </script>
 </body>

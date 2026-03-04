@@ -17,7 +17,6 @@
         .btn-menu { border: 4px solid; color: white; padding: 30px 40px; font-size: 1.8em; font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 300px; }
         .btn-menu:hover { transform: scale(1.05); }
         .btn-menu span { font-size: 0.6em; color: #e2e8f0; font-weight: normal; text-align: center;}
-        
         #btn-menu-materi { background: #1e1e2f; border-color: #f9d423; box-shadow: 0 10px 30px rgba(249, 212, 35, 0.3); }
         #btn-menu-drag { background: #1e1e2f; border-color: #00f2fe; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3); }
         #btn-menu-balap { background: #1e1e2f; border-color: #b224ef; box-shadow: 0 10px 30px rgba(178, 36, 239, 0.3); }
@@ -45,10 +44,8 @@
         .btn-kota { background: #2a2a40; border: 4px solid; color: white; padding: 30px 40px; font-size: 1.8em; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 320px; }
         .btn-kota:hover { transform: scale(1.05); }
         .btn-kota span { font-size: 0.5em; color: #a8b2d1; font-weight: normal;}
-        #btn-kota-a { border-color: #00f2fe; } 
-        #btn-kota-b { border-color: #ff758c; }
-        #btn-kota-c { border-color: #43e97b; } 
-        #btn-kota-d { border-color: #f9d423; }
+        #btn-kota-a { border-color: #00f2fe; } #btn-kota-b { border-color: #ff758c; }
+        #btn-kota-c { border-color: #43e97b; } #btn-kota-d { border-color: #f9d423; }
 
         /* --- AREA GAME DRAG DROP --- */
         #area-game { display: none; padding-top: 20px; }
@@ -64,17 +61,17 @@
         .kotak-kategori.drag-over { background-color: #3d3d5c; border-color: #00f2fe; }
         .kotak-kategori h2 { color: #64ffda; font-size: 1.8em; margin-top: 0; border-bottom: 2px solid #64ffda; padding-bottom: 10px; width: 100%; }
 
-        /* --- AREA LEADERBOARD (KLASEMEN BALAP) --- */
+        /* --- AREA LEADERBOARD (KLASEMEN AKHIR) --- */
         #layar-leaderboard { display: none; flex-direction: column; justify-content: flex-start; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1e1e2f; z-index: 900; padding: 40px; box-sizing: border-box; }
-        .papan-balap { width: 90%; max-width: 900px; height: 450px; background: #252538; border-radius: 20px; position: relative; padding: 20px 0; border: 4px solid #b224ef; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); margin-bottom: 30px;}
-        .bar-siswa { position: absolute; left: 20px; height: 60px; border-radius: 30px; display: flex; align-items: center; padding: 0 20px; font-size: 1.5em; font-weight: bold; color: white; transition: top 0.6s cubic-bezier(0.4, 0, 0.2, 1), width 0.6s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; overflow: hidden;}
+        .papan-balap { width: 90%; max-width: 900px; height: 420px; background: #252538; border-radius: 20px; position: relative; padding: 20px 0; border: 4px solid #b224ef; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); margin-bottom: 30px;}
         
-        /* Warna Bar Siswa */
-        #bar-1 { background: linear-gradient(90deg, #ff758c, #ff7eb3); }
-        #bar-2 { background: linear-gradient(90deg, #f9d423, #ff4e50); }
-        #bar-3 { background: linear-gradient(90deg, #43e97b, #38f9d7); color: #1e1e2f; }
-        #bar-4 { background: linear-gradient(90deg, #00f2fe, #4facfe); }
-        #bar-5 { background: linear-gradient(90deg, #b224ef, #7579ff); }
+        /* Animasi pergerakan bar yang smooth! */
+        .bar-siswa { position: absolute; left: 20px; height: 60px; border-radius: 30px; display: flex; align-items: center; padding: 0 20px; font-size: 1.5em; font-weight: bold; color: white; transition: top 1s cubic-bezier(0.4, 0, 0.2, 1), width 1.5s ease-out; box-shadow: 0 5px 15px rgba(0,0,0,0.3); white-space: nowrap; overflow: hidden;}
+        
+        #bar-A { background: linear-gradient(90deg, #00f2fe, #4facfe); }
+        #bar-B { background: linear-gradient(90deg, #ff758c, #ff7eb3); }
+        #bar-C { background: linear-gradient(90deg, #43e97b, #38f9d7); color: #1e1e2f; }
+        #bar-D { background: linear-gradient(90deg, #f9d423, #ff4e50); }
 
         .nilai-teks { margin-left: auto; background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 15px; font-family: monospace; }
         .btn-pantau { background: #b224ef; color: white; border: none; padding: 15px 40px; font-size: 1.8em; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 10px 20px rgba(178, 36, 239, 0.4); }
@@ -94,18 +91,9 @@
     <div id="layar-menu-utama">
         <div class="judul-menu">HAKI KREATOR HUB</div>
         <div class="menu-container">
-            <button class="btn-menu" id="btn-menu-materi" onclick="bukaLayar('layar-materi')">
-                📖 MATERI HAKI
-                <span>(Buku Saku Digital)</span>
-            </button>
-            <button class="btn-menu" id="btn-menu-drag" onclick="bukaLayar('layar-menu-kota')">
-                🧩 GAME MISI
-                <span>(Pilih 4 Kota Penugasan)</span>
-            </button>
-            <button class="btn-menu" id="btn-menu-balap" onclick="bukaLayar('layar-leaderboard')">
-                🏆 LIVE KLASEMEN
-                <span>(Pantau Nilai Siswa)</span>
-            </button>
+            <button class="btn-menu" id="btn-menu-materi" onclick="bukaLayar('layar-materi')">📖 MATERI HAKI<span>(Buku Saku Digital)</span></button>
+            <button class="btn-menu" id="btn-menu-drag" onclick="bukaLayar('layar-menu-kota')">🧩 GAME MISI<span>(Selesaikan 4 Kota)</span></button>
+            <button class="btn-menu" id="btn-menu-balap" onclick="bukaLeaderboard()">🏆 KLASEMEN AKHIR<span>(Hasil 4 Kota)</span></button>
         </div>
     </div>
 
@@ -126,10 +114,10 @@
     <div id="layar-menu-kota">
         <div class="judul-menu">PILIH MISI DRAG & DROP</div>
         <div class="grid-kota">
-            <button class="btn-kota" id="btn-kota-a" onclick="mulaiGameDrag('A')">KOTA A <span>(Kasus IT & Software)</span></button>
-            <button class="btn-kota" id="btn-kota-b" onclick="mulaiGameDrag('B')">KOTA B <span>(Kasus Film & TV)</span></button>
-            <button class="btn-kota" id="btn-kota-c" onclick="mulaiGameDrag('C')">KOTA C <span>(Kasus Coding & AI)</span></button>
-            <button class="btn-kota" id="btn-kota-d" onclick="mulaiGameDrag('D')">KOTA D <span>(Kasus Kreator TikTok)</span></button>
+            <button class="btn-kota" id="btn-kota-a" onclick="mulaiGameDrag('A')">KOTA A <span>(Kelompok Software)</span></button>
+            <button class="btn-kota" id="btn-kota-b" onclick="mulaiGameDrag('B')">KOTA B <span>(Kelompok Film)</span></button>
+            <button class="btn-kota" id="btn-kota-c" onclick="mulaiGameDrag('C')">KOTA C <span>(Kelompok AI)</span></button>
+            <button class="btn-kota" id="btn-kota-d" onclick="mulaiGameDrag('D')">KOTA D <span>(Kelompok Kreator)</span></button>
         </div>
         <button class="btn-navigasi-kecil" onclick="bukaLayar('layar-menu-utama')">⬅ Kembali ke Dashboard</button>
     </div>
@@ -149,17 +137,21 @@
         </div>
 
         <div id="pesan-hasil"></div>
-        <button class="btn-navigasi-kecil" id="btn-kembali-game" onclick="bukaLayar('layar-menu-kota')" style="display:none; border-color:#fff; color:#fff;">⬅ Pilih Kota Lain</button>
+        <button class="btn-navigasi-kecil" id="btn-kembali-game" onclick="bukaLayar('layar-menu-kota')" style="display:none; border-color:#fff; color:#fff;">⬅ Simpan & Pilih Kota Lain</button>
     </div>
 
     <div id="layar-leaderboard">
-        <h1 style="color:#b224ef; margin-bottom: 5px;">KLASEMEN LIVE LKPD</h1>
-        <p style="color:#a8b2d1; font-size:1.2em; margin-bottom: 20px;">Pantau progress siswa secara real-time!</p>
+        <h1 style="color:#b224ef; margin-bottom: 5px;">PAPAN KLASEMEN AKHIR</h1>
+        <p style="color:#a8b2d1; font-size:1.2em; margin-bottom: 20px;">Menampilkan hasil dari Misi 4 Kota!</p>
         
         <div class="papan-balap" id="papan-balap">
-            </div>
+            <div class="bar-siswa" id="bar-A" style="top: 20px; width: 15%;">KOTA A <span class="nilai-teks" id="nilai-A">0</span></div>
+            <div class="bar-siswa" id="bar-B" style="top: 110px; width: 15%;">KOTA B <span class="nilai-teks" id="nilai-B">0</span></div>
+            <div class="bar-siswa" id="bar-C" style="top: 200px; width: 15%;">KOTA C <span class="nilai-teks" id="nilai-C">0</span></div>
+            <div class="bar-siswa" id="bar-D" style="top: 290px; width: 15%;">KOTA D <span class="nilai-teks" id="nilai-D">0</span></div>
+        </div>
 
-        <button class="btn-pantau" id="btn-mulai-balap" onclick="mulaiSimulasiBalap()">🚀 MULAI PANTAU NILAI</button>
+        <button class="btn-pantau" onclick="tampilkanHasilBalapan()">🚀 TAMPILKAN HASIL!</button>
         <button class="btn-navigasi-kecil" style="display:block;" onclick="bukaLayar('layar-menu-utama')">⬅ Kembali ke Dashboard</button>
     </div>
 
@@ -171,51 +163,22 @@
         
         function mainkanSuara(tipe) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
-            
             if(tipe === 'whoosh') {
-                const bufferSize = audioCtx.sampleRate * 0.4;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+                const bufferSize = audioCtx.sampleRate * 0.4; const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
                 const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
-                const filter = audioCtx.createBiquadFilter(); filter.type = 'bandpass';
-                filter.frequency.setValueAtTime(200, audioCtx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.15);
-                filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.4);
-                const gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 0.1);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                noise.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination);
-                noise.start(); return;
+                const filter = audioCtx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.setValueAtTime(200, audioCtx.currentTime); filter.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.15); filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.4);
+                const gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 0.1); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                noise.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination); noise.start(); return;
             }
-
             const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
             osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-            
-            if(tipe === 'benar') {
-                osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1318.51, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.5);
-            } else if(tipe === 'salah') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-            } else if(tipe === 'menang') {
-                osc.type = 'square'; osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.1);
-                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2);
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
-                osc.start(); osc.stop(audioCtx.currentTime + 1);
-            }
+            if(tipe === 'benar') { osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1318.51, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); osc.start(); osc.stop(audioCtx.currentTime + 0.5); } 
+            else if(tipe === 'salah') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3); osc.start(); osc.stop(audioCtx.currentTime + 0.3); } 
+            else if(tipe === 'menang') { osc.type = 'square'; osc.frequency.setValueAtTime(440, audioCtx.currentTime); osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.1); osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2); osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1); osc.start(); osc.stop(audioCtx.currentTime + 1); }
         }
 
-        function inisiasiAudio() {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            bgMusic.play().catch(e => console.log("Menunggu interaksi"));
-        }
+        function inisiasiAudio() { if(audioCtx.state === 'suspended') audioCtx.resume(); bgMusic.play().catch(e => console.log("Menunggu")); }
 
         // --- 2. NAVIGASI LAYAR ---
         function sembunyikanSemuaLayar() {
@@ -225,32 +188,25 @@
             document.getElementById('area-game').style.display = 'none';
             document.getElementById('layar-leaderboard').style.display = 'none';
         }
-
-        function bukaLayar(idLayar) {
-            inisiasiAudio(); sembunyikanSemuaLayar();
-            document.getElementById(idLayar).style.display = 'flex';
-            if(idLayar === 'area-game') document.getElementById(idLayar).style.display = 'block';
-            
-            // Hentikan simulasi balap jika keluar dari layar leaderboard
-            if(idLayar !== 'layar-leaderboard' && intervalBalap) {
-                clearInterval(intervalBalap);
-                document.getElementById('btn-mulai-balap').innerText = "🚀 MULAI PANTAU NILAI";
-            }
-        }
-
+        function bukaLayar(idLayar) { inisiasiAudio(); sembunyikanSemuaLayar(); document.getElementById(idLayar).style.display = 'flex'; if(idLayar === 'area-game') document.getElementById(idLayar).style.display = 'block'; }
         function flipKartu(elemen) { inisiasiAudio(); mainkanSuara('whoosh'); elemen.classList.toggle('is-flipped'); }
 
-        // --- 3. LOGIKA GAME DRAG DROP (4 KOTA) ---
+        // --- 3. LOGIKA GAME DRAG DROP (SIMPAN SKOR KE DATABASE LOKAL) ---
+        // Ini adalah DATABASE yang menyimpan skor 4 KOTA (Awalnya 0)
+        let skorKota = { A: 0, B: 0, C: 0, D: 0 };
+        let kotaSedangMain = '';
+
         const bankSoalDrag = {
             'A': { nama: "KOTA A (Software IT)", k1: { teks: "Source Code App", jawaban: "hak-cipta" }, k2: { teks: "Logo Startup Tech", jawaban: "merek" }, k3: { teks: "Sistem Database Baru", jawaban: "paten" }, k4: { teks: "Desain UI Web", jawaban: "desain" } },
             'B': { nama: "KOTA B (Broadcasting)", k1: { teks: "Naskah Skenario", jawaban: "hak-cipta" }, k2: { teks: "Nama Prod. House", jawaban: "merek" }, k3: { teks: "Sistem Gimbal Kamera", jawaban: "paten" }, k4: { teks: "Bodi Lensa Kamera", jawaban: "desain" } },
             'C': { nama: "KOTA C (Coding & AI)", k1: { teks: "Script Koding AI", jawaban: "hak-cipta" }, k2: { teks: "Logo Lab Robotika", jawaban: "merek" }, k3: { teks: "Algoritma Machine Learning", jawaban: "paten" }, k4: { teks: "Casing Robot Fisik", jawaban: "desain" } },
-            'D': { nama: "KOTA D (Konten TikTok)", k1: { teks: "Video Original Aesthetic", jawaban: "hak-cipta" }, k2: { teks: "Nama Channel Kreator", jawaban: "merek" }, k3: { teks: "Alat Penyangga Ringlight Baru", jawaban: "paten" }, k4: { teks: "Layout Etalase TikTok", jawaban: "desain" } }
+            'D': { nama: "KOTA D (Konten TikTok)", k1: { teks: "Video Original Aesthetic", jawaban: "hak-cipta" }, k2: { teks: "Nama Channel Kreator", jawaban: "merek" }, k3: { teks: "Alat Penyangga Ringlight", jawaban: "paten" }, k4: { teks: "Layout Etalase TikTok", jawaban: "desain" } }
         };
 
         let kunciJawabanDrag = {};
 
         function mulaiGameDrag(pilihanKota) {
+            kotaSedangMain = pilihanKota; // Ingat kota mana yang sedang main
             bukaLayar('area-game');
             document.getElementById('btn-kembali-game').style.display = 'none';
             document.getElementById('pesan-hasil').innerHTML = '';
@@ -263,6 +219,7 @@
                 kunciJawabanDrag[idKartu] = bankSoalDrag[pilihanKota][idKartu].jawaban;
                 elemenKartu.classList.remove('benar', 'salah'); sumber.appendChild(elemenKartu);
             }
+            hitungDanSimpanSkor(); // Reset skor kota ini jadi 0 saat mulai baru
         }
 
         const kartus = document.querySelectorAll('.kartu'); const kotaks = document.querySelectorAll('.kotak-kategori'); const sumber = document.getElementById('sumber'); const pesan = document.getElementById('pesan-hasil');
@@ -284,16 +241,24 @@
                             draggedElement.classList.add('salah'); draggedElement.classList.remove('benar'); mainkanSuara('salah');
                         }
                     } else { draggedElement.classList.remove('benar', 'salah'); }
+                    
+                    hitungDanSimpanSkor(); // <--- SETIAP PINDAH KARTU, SKOR DISIMPAN!
                     cekSemuaSelesaiDrag();
                 }
             });
         }
 
+        function hitungDanSimpanSkor() {
+            // Hitung ada berapa kartu yang warnanya hijau (benar)
+            let jumlahBenar = document.querySelectorAll('.benar').length;
+            // Setiap 1 jawaban benar dapat 250 poin. Max = 1000.
+            skorKota[kotaSedangMain] = jumlahBenar * 250; 
+        }
+
         function cekSemuaSelesaiDrag() {
             let skorBenar = document.querySelectorAll('.benar').length;
-            let totalTerjawab = document.querySelectorAll('.area-game .kategori-container .kartu, #area-game .kotak-kategori .kartu').length;
             if (skorBenar === 4) {
-                pesan.style.color = "#43e97b"; pesan.innerHTML = "🎉 MISI SELESAI! Mantap Sekali! 🎉";
+                pesan.style.color = "#43e97b"; pesan.innerHTML = "🎉 MISI SELESAI! Poin 1000 Tersimpan! 🎉";
                 setTimeout(() => mainkanSuara('menang'), 500); document.getElementById('btn-kembali-game').style.display = 'inline-block';
             } else if (document.querySelectorAll('.salah').length > 0) {
                 pesan.style.color = "#ff758c"; pesan.innerHTML = "🔥 Masih ada yang salah. Ayo perbaiki! 🔥";
@@ -301,79 +266,50 @@
             } else { pesan.innerHTML = ""; document.getElementById('btn-kembali-game').style.display = 'none'; }
         }
 
-        // --- 4. LOGIKA SIMULASI LEADERBOARD BALAPAN ---
-        let dataSiswa = [
-            { id: 'bar-1', nama: "Kelompok 1", nilai: 0 },
-            { id: 'bar-2', nama: "Kelompok 2", nilai: 0 },
-            { id: 'bar-3', nama: "Kelompok 3", nilai: 0 },
-            { id: 'bar-4', nama: "Kelompok 4", nilai: 0 },
-            { id: 'bar-5', nama: "Kelompok 5", nilai: 0 }
-        ];
-
-        let intervalBalap = null;
-
-        // Inisialisasi tampilan awal papan
-        function renderPapanAwal() {
-            const papan = document.getElementById('papan-balap');
-            papan.innerHTML = '';
-            dataSiswa.forEach((siswa, index) => {
-                let div = document.createElement('div');
-                div.className = 'bar-siswa';
-                div.id = siswa.id;
-                div.style.top = (index * 80 + 20) + 'px';
-                div.style.width = '20%'; // Lebar awal
-                
-                div.innerHTML = `${siswa.nama} <span class="nilai-teks" id="nilai-${siswa.id}">0</span>`;
-                papan.appendChild(div);
+        // --- 4. LOGIKA LEADERBOARD (TARIK DATA DARI SKOR DRAG DROP) ---
+        function bukaLeaderboard() {
+            bukaLayar('layar-leaderboard');
+            // Saat dibuka, reset posisi bar ke 0 semua biar surprise
+            ['A', 'B', 'C', 'D'].forEach((id, index) => {
+                let bar = document.getElementById('bar-' + id);
+                document.getElementById('nilai-' + id).innerText = 0;
+                bar.style.width = '15%'; // Lebar minimal
+                bar.style.top = (index * 90 + 20) + 'px'; // Posisi urut ABCD
             });
         }
-        renderPapanAwal();
 
-        function mulaiSimulasiBalap() {
-            const btn = document.getElementById('btn-mulai-balap');
+        function tampilkanHasilBalapan() {
+            mainkanSuara('whoosh'); // Efek suara mulai
             
-            if(intervalBalap) {
-                // Hentikan simulasi
-                clearInterval(intervalBalap);
-                intervalBalap = null;
-                btn.innerText = "🚀 LANJUT PANTAU";
-                return;
-            }
+            // Masukkan skor ke dalam array agar bisa di-ranking (diurutkan)
+            let hasilAkhir = [
+                { id: 'A', nilai: skorKota.A },
+                { id: 'B', nilai: skorKota.B },
+                { id: 'C', nilai: skorKota.C },
+                { id: 'D', nilai: skorKota.D }
+            ];
 
-            btn.innerText = "🛑 JEDA PANTAUAN";
-            mainkanSuara('whoosh');
+            // Urutkan dari nilai tertinggi ke terendah
+            hasilAkhir.sort((a, b) => b.nilai - a.nilai);
 
-            intervalBalap = setInterval(() => {
-                // Tambah nilai secara acak untuk efek balap
-                dataSiswa.forEach(siswa => {
-                    let tambah = Math.floor(Math.random() * 15);
-                    siswa.nilai += tambah;
-                    if(siswa.nilai > 1000) siswa.nilai = 1000; // Cap limit
-                });
-
-                // Urutkan berdasarkan nilai tertinggi
-                let sortedData = [...dataSiswa].sort((a, b) => b.nilai - a.nilai);
-
-                // Update posisi (Top) dan panjang (Width) di layar
-                sortedData.forEach((siswa, index) => {
-                    let elemenBar = document.getElementById(siswa.id);
-                    let teksNilai = document.getElementById(`nilai-${siswa.id}`);
-                    
-                    // Update Angka
-                    teksNilai.innerText = siswa.nilai;
-                    
-                    // Update Panjang Bar (Min 20%, Max 90%)
-                    let persentase = 20 + (siswa.nilai / 1000 * 70);
-                    elemenBar.style.width = persentase + '%';
-                    
-                    // Update Posisi Y (Balapan naik/turun)
-                    elemenBar.style.top = (index * 80 + 20) + 'px';
-                });
+            // Animasikan Bar-nya!
+            hasilAkhir.forEach((kota, index) => {
+                let elemenBar = document.getElementById('bar-' + kota.id);
+                let teksNilai = document.getElementById('nilai-' + kota.id);
                 
-                // Pancing suara TING kecil kadang-kadang saat ada yang menyalip
-                if(Math.random() > 0.7) mainkanSuara('benar');
+                // 1. Animasikan Angkanya
+                teksNilai.innerText = kota.nilai;
+                
+                // 2. Animasikan Lebar Bar-nya (Min 15%, Max 90%)
+                let persentase = 15 + (kota.nilai / 1000 * 75);
+                elemenBar.style.width = persentase + '%';
+                
+                // 3. Animasikan Posisinya (Yang juara 1 naik ke atas!)
+                elemenBar.style.top = (index * 90 + 20) + 'px';
+            });
 
-            }, 1000); // Update setiap 1 detik
+            // Putar musik menang setelah balapan selesai (jeda 1.5 detik)
+            setTimeout(() => { mainkanSuara('menang'); }, 1500);
         }
     </script>
 </body>

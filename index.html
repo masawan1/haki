@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Interaktif & Materi HAKI - SMK Informatika</title>
+    <title>Pembelajaran Interaktif HAKI - SMK Informatika</title>
     <script src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"></script>
     <style>
         body {
@@ -19,47 +19,22 @@
         h1 { color: #00f2fe; font-size: 3em; margin-bottom: 5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,242,254,0.5);}
         #judul-kota { font-size: 1.5em; color: #f9d423; margin-bottom: 20px; font-weight: bold; }
 
-        /* --- LAYAR MENU UTAMA --- */
-        #layar-mulai {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(30, 30, 47, 0.98);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 999;
-        }
-        .judul-menu { font-size: 3.5em; color: #64ffda; margin-bottom: 30px; text-transform: uppercase; text-shadow: 0 0 20px rgba(100,255,218,0.5);}
-        
-        .menu-container { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; max-width: 1200px;}
-        
-        .btn-menu {
-            border: 4px solid; color: white;
-            padding: 30px 40px; font-size: 1.8em; font-weight: bold;
-            border-radius: 25px; cursor: pointer; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            width: 300px;
-        }
-        .btn-menu:hover { transform: scale(1.05); }
-        .btn-menu span { font-size: 0.6em; color: #e2e8f0; font-weight: normal; text-align: center;}
-        
-        #btn-materi { background: #1e1e2f; border-color: #f9d423; box-shadow: 0 10px 30px rgba(249, 212, 35, 0.3); }
-        #btn-kota-a { background: #1e1e2f; border-color: #00f2fe; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3); }
-        #btn-kota-b { background: #1e1e2f; border-color: #ff758c; box-shadow: 0 10px 30px rgba(255, 117, 140, 0.3); }
-
-        /* --- LAYAR INFOGRAFIS MATERI --- */
+        /* --- 1. LAYAR INFOGRAFIS MATERI (TAMPIL PERTAMA KALI) --- */
         #layar-materi {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #1e1e2f; z-index: 900; padding: 40px; box-sizing: border-box;
-            overflow-y: auto;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #1e1e2f; z-index: 999; padding: 40px; box-sizing: border-box;
         }
-        .judul-materi { font-size: 3em; color: #f9d423; margin-bottom: 10px; }
-        .sub-materi { font-size: 1.2em; color: #a8b2d1; margin-bottom: 40px; }
+        .judul-materi { font-size: 3.5em; color: #f9d423; margin-bottom: 10px; text-shadow: 0 0 15px rgba(249, 212, 35, 0.4);}
+        .sub-materi { font-size: 1.5em; color: #a8b2d1; margin-bottom: 40px; }
 
         .kartu-materi-container {
-            display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;
+            display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 50px;
         }
 
         /* Efek Balik (Flip 3D) untuk TV Sentuh */
         .flip-card {
-            background-color: transparent; width: 280px; height: 350px;
+            background-color: transparent; width: 260px; height: 330px;
             perspective: 1000px; cursor: pointer;
         }
         .flip-card-inner {
@@ -87,7 +62,41 @@
         .flip-card-back p { font-size: 1.2em; font-weight: bold; margin: 0; line-height: 1.4;}
         .flip-card-back .contoh { background: rgba(0,0,0,0.1); padding: 10px; border-radius: 10px; margin-top: 15px; font-size: 1em; font-style: italic;}
 
-        /* --- AREA GAME --- */
+        /* Tombol Transisi ke Game */
+        .btn-lanjut-game {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: white; border: none;
+            padding: 20px 50px; font-size: 2em; border-radius: 50px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4); transition: 0.3s;
+        }
+        .btn-lanjut-game:hover { transform: scale(1.05); }
+
+        /* --- 2. LAYAR MENU PILIH KOTA (Disembunyikan di awal) --- */
+        #layar-menu-kota {
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(30, 30, 47, 0.98); z-index: 900;
+        }
+        .judul-menu { font-size: 3.5em; color: #64ffda; margin-bottom: 40px; text-transform: uppercase; text-shadow: 0 0 20px rgba(100,255,218,0.5);}
+        .menu-container { display: flex; gap: 40px; }
+        
+        .btn-kota {
+            background: #2a2a40; border: 4px solid; color: white;
+            padding: 40px 60px; font-size: 2em; font-weight: bold;
+            border-radius: 30px; cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 10px; width: 350px;
+        }
+        .btn-kota:hover { transform: scale(1.05); }
+        .btn-kota span { font-size: 0.5em; color: #a8b2d1; font-weight: normal;}
+        
+        #btn-kota-a { border-color: #00f2fe; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3); }
+        #btn-kota-b { border-color: #ff758c; box-shadow: 0 10px 30px rgba(255, 117, 140, 0.3); }
+
+        .btn-navigasi-kecil {
+            margin-top: 40px; background: transparent; color: #a8b2d1; border: 2px solid #a8b2d1;
+            padding: 10px 30px; font-size: 1.2em; border-radius: 15px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-navigasi-kecil:hover { background: #a8b2d1; color: #1e1e2f; }
+
+        /* --- 3. AREA GAME --- */
         #area-game { display: none; padding-top: 20px; }
 
         .kartu-container {
@@ -118,13 +127,6 @@
         .kotak-kategori h2 { color: #64ffda; font-size: 1.8em; margin-top: 0; border-bottom: 2px solid #64ffda; padding-bottom: 10px; width: 100%; }
 
         #pesan-hasil { font-size: 2.5em; font-weight: bold; margin-top: 20px; height: 50px; }
-        
-        .btn-navigasi {
-            margin-top: 25px; background: #3d3d5c; color: white; border: 2px solid #a8b2d1;
-            padding: 15px 40px; font-size: 1.5em; border-radius: 15px; cursor: pointer;
-            transition: 0.3s; font-weight: bold;
-        }
-        .btn-navigasi:hover { background: #a8b2d1; color: #1e1e2f; }
 
         .benar { border-color: #43e97b !important; box-shadow: 0 0 25px #43e97b !important; }
         .salah { border-color: #ff4e50 !important; box-shadow: 0 0 25px #ff4e50 !important; animation: getar 0.4s; }
@@ -137,27 +139,9 @@
 </head>
 <body>
 
-    <div id="layar-mulai">
-        <div class="judul-menu">Simulator HAKI Digital</div>
-        <div class="menu-container">
-            <button class="btn-menu" id="btn-materi" onclick="bukaMateri()">
-                📖 MATERI
-                <span>(Buka Infografis Sentuh)</span>
-            </button>
-            <button class="btn-menu" id="btn-kota-a" onclick="mulaiGame('A')">
-                🎮 KOTA A
-                <span>(Misi Programmer & IT)</span>
-            </button>
-            <button class="btn-menu" id="btn-kota-b" onclick="mulaiGame('B')">
-                🎮 KOTA B
-                <span>(Misi Broadcasting & Film)</span>
-            </button>
-        </div>
-    </div>
-
     <div id="layar-materi">
-        <h1 class="judul-materi">Buku Saku HAKI Kreator</h1>
-        <p class="sub-materi">Sentuh kartu di bawah ini untuk membalik dan membaca detailnya!</p>
+        <h1 class="judul-materi">BUKU SAKU HAKI KREATOR</h1>
+        <p class="sub-materi">Sentuh layar TV pada kartu di bawah ini untuk mempelajari jenis HAKI!</p>
         
         <div class="kartu-materi-container">
             <div class="flip-card" onclick="flipKartu(this)">
@@ -221,11 +205,24 @@
             </div>
         </div>
         
-        <button class="btn-navigasi" onclick="kembaliKeMenu()" style="margin-top: 40px;">⬅ KEMBALI KE MENU UTAMA</button>
+        <button class="btn-lanjut-game" onclick="lanjutKePilihKota()">LANJUT KE GAME 🎮</button>
+    </div>
+
+    <div id="layar-menu-kota">
+        <div class="judul-menu">PILIH MISI EVALUASI</div>
+        <div class="menu-container">
+            <button class="btn-kota" id="btn-kota-a" onclick="mulaiGame('A')">
+                KOTA A <span>(Kasus IT & Programmer)</span>
+            </button>
+            <button class="btn-kota" id="btn-kota-b" onclick="mulaiGame('B')">
+                KOTA B <span>(Kasus Film & Broadcasting)</span>
+            </button>
+        </div>
+        <button class="btn-navigasi-kecil" onclick="kembaliKeMateri()">⬅ Kembali Baca Materi</button>
     </div>
 
     <div id="area-game">
-        <h1>Misi Evaluasi HAKI</h1>
+        <h1>Uji Konsentrasi HAKI</h1>
         <div id="judul-kota">Sedang Mengerjakan: MISI KOTA ...</div>
         
         <div class="kartu-container" id="sumber">
@@ -243,14 +240,14 @@
         </div>
 
         <div id="pesan-hasil"></div>
-        <button class="btn-navigasi" id="btn-kembali-game" onclick="kembaliKeMenu()" style="display:none;">⬅ Kembali ke Menu</button>
+        <button class="btn-navigasi-kecil" id="btn-kembali-game" onclick="lanjutKePilihKota()" style="display:none; border-color:#fff; color:#fff;">⬅ Pilih Kota Lain</button>
     </div>
 
     <script>
         // --- SISTEM AUDIO ONLINE ---
         let bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); 
         bgMusic.loop = true;
-        bgMusic.volume = 0.15; // Volume background tidak terlalu keras
+        bgMusic.volume = 0.15;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function mainkanSuara(tipe) {
@@ -282,28 +279,29 @@
             }
         }
 
-        // --- NAVIGASI LAYAR ---
+        // Pancing Audio jalan saat ada interaksi sentuhan pertama kali
         function inisiasiAudio() {
             if(audioCtx.state === 'suspended') audioCtx.resume();
-            bgMusic.play().catch(e => console.log("Menunggu interaksi browser"));
+            bgMusic.play().catch(e => console.log("Menunggu interaksi"));
         }
 
-        function bukaMateri() {
+        // --- ANIMASI FLIP KARTU MATERI ---
+        function flipKartu(elemen) {
+            inisiasiAudio(); // Musik mulai jalan pas guru buka kartu pertama
+            elemen.classList.toggle('is-flipped');
+        }
+
+        // --- NAVIGASI ALUR ---
+        function lanjutKePilihKota() {
             inisiasiAudio();
-            document.getElementById('layar-mulai').style.display = 'none';
-            document.getElementById('layar-materi').style.display = 'block';
-            document.getElementById('area-game').style.display = 'none';
-        }
-
-        function kembaliKeMenu() {
-            document.getElementById('layar-mulai').style.display = 'flex';
             document.getElementById('layar-materi').style.display = 'none';
             document.getElementById('area-game').style.display = 'none';
+            document.getElementById('layar-menu-kota').style.display = 'flex';
         }
 
-        // --- ANIMASI FLIP KARTU TV SENTUH ---
-        function flipKartu(elemen) {
-            elemen.classList.toggle('is-flipped');
+        function kembaliKeMateri() {
+            document.getElementById('layar-menu-kota').style.display = 'none';
+            document.getElementById('layar-materi').style.display = 'flex';
         }
 
         // --- LOGIKA GAME ---
@@ -328,8 +326,7 @@
 
         function mulaiGame(pilihanKota) {
             inisiasiAudio();
-            document.getElementById('layar-mulai').style.display = 'none';
-            document.getElementById('layar-materi').style.display = 'none';
+            document.getElementById('layar-menu-kota').style.display = 'none';
             document.getElementById('area-game').style.display = 'block';
             
             document.getElementById('btn-kembali-game').style.display = 'none';

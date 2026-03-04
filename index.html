@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Interaktif HAKI - SMK Informatika</title>
+    <style>
+        /* Desain UI bergaya Modern Dark Mode cocok untuk TV Besar */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2f;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 30px;
+            user-select: none; /* Mencegah teks terblok saat disentuh */
+        }
+        h1 { color: #00f2fe; font-size: 3.5em; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;}
+        p { font-size: 1.5em; color: #a8b2d1; margin-bottom: 40px; }
+
+        /* Area Tempat Kartu Awal */
+        .kartu-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            padding: 30px;
+            background-color: #252538;
+            border-radius: 20px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        /* Desain Kartu yang Bisa Digerakkan */
+        .kartu {
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: grab;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .kartu:active { cursor: grabbing; transform: scale(1.1); }
+        
+        /* Warna-warni Kartu */
+        .c1 { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; } /* Merah Muda */
+        .c2 { background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%); color: white; } /* Oranye */
+        .c3 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #1e1e2f; } /* Hijau */
+        .c4 { background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%); color: white; } /* Ungu */
+
+        /* Area Kotak Kategori (Drop Zone) */
+        .kategori-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .kotak-kategori {
+            width: 22%;
+            min-height: 300px;
+            background-color: #2a2a40;
+            border: 4px dashed #64ffda;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        .kotak-kategori.drag-over {
+            background-color: #3d3d5c;
+            border-color: #00f2fe;
+        }
+        .kotak-kategori h2 {
+            color: #64ffda;
+            font-size: 2.2em;
+            margin-top: 0;
+            border-bottom: 2px solid #64ffda;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Uji Konsentrasi: Kasus HAKI</h1>
+    <p>Sentuh dan geser kartu kasus di bawah ini ke kotak kategori HAKI yang tepat!</p>
+
+    <div class="kartu-container" id="sumber">
+        <div class="kartu c1" draggable="true" id="k1">Source Code Aplikasi</div>
+        <div class="kartu c2" draggable="true" id="k2">Logo Rumah Produksi Film</div>
+        <div class="kartu c3" draggable="true" id="k3">Algoritma AI Baru</div>
+        <div class="kartu c4" draggable="true" id="k4">Desain UI/UX Web</div>
+    </div>
+
+    <div class="kategori-container">
+        <div class="kotak-kategori" id="hak-cipta">
+            <h2>Hak Cipta</h2>
+        </div>
+        <div class="kotak-kategori" id="merek">
+            <h2>Merek</h2>
+        </div>
+        <div class="kotak-kategori" id="paten">
+            <h2>Paten</h2>
+        </div>
+        <div class="kotak-kategori" id="desain">
+            <h2>Desain Industri</h2>
+        </div>
+    </div>
+
+    <script>
+        // Logika Drag and Drop
+        const kartus = document.querySelectorAll('.kartu');
+        const kotaks = document.querySelectorAll('.kotak-kategori');
+        const sumber = document.getElementById('sumber');
+
+        kartus.forEach(kartu => {
+            kartu.addEventListener('dragstart', () => {
+                kartu.classList.add('dragging');
+            });
+            kartu.addEventListener('dragend', () => {
+                kartu.classList.remove('dragging');
+            });
+        });
+
+        // Menambahkan kotak sumber agar kartu bisa dikembalikan
+        kotaks.forEach(kotak => setDropZone(kotak));
+        setDropZone(sumber);
+
+        function setDropZone(zona) {
+            zona.addEventListener('dragover', e => {
+                e.preventDefault();
+                zona.classList.add('drag-over');
+            });
+
+            zona.addEventListener('dragleave', () => {
+                zona.classList.remove('drag-over');
+            });
+
+            zona.addEventListener('drop', e => {
+                e.preventDefault();
+                zona.classList.remove('drag-over');
+                const draggedElement = document.querySelector('.dragging');
+                if (draggedElement) {
+                    zona.appendChild(draggedElement);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

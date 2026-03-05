@@ -166,24 +166,41 @@
     </div>
 
     <script>
-        // --- 1. SISTEM AUDIO (ANTI BENTROK) ---
-        let elemenBGM = document.getElementById('musik-bgm');
-        elemenBGM.volume = 0.15;
-        let isMutedByUser = false; 
+        // --- 1. SISTEM AUDIO ANTI-NGEBUG ---
+        let audioCtx = null;
+        let isMutedByUser = false;
 
-        // Fungsi pemicu audio yang aman
-        function pancingAudioBGM() {
+        // Inisiasi mesin audio (Hanya jalan kalau aman)
+        function initAudioAman() {
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            } catch (e) {
+                console.log("Audio SFX dimatikan sementara oleh browser.");
+            }
+        }
+
+        // Pancing musik BGM dengan aman
+        function pancingBGM() {
+            let elemenBGM = document.getElementById('musik-bgm');
+            elemenBGM.volume = 0.15;
             if (elemenBGM.paused && !isMutedByUser) {
-                let playPromise = elemenBGM.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => { console.log("Menunggu interaksi layar."); });
+                let janjiMain = elemenBGM.play();
+                if (janjiMain !== undefined) {
+                    janjiMain.catch(error => { console.log("BGM menunggu klik."); });
                 }
             }
         }
 
-        // Fungsi Tombol Kontrol Musik
         function toggleMusik() {
+            let elemenBGM = document.getElementById('musik-bgm');
             let btn = document.getElementById('btn-kontrol-musik');
+            
             if (!isMutedByUser) {
                 elemenBGM.pause();
                 isMutedByUser = true;
@@ -195,33 +212,30 @@
             }
         }
 
-        // Sintesis Efek Suara (SFX)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function mainkanSuara(tipe) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            
-            if(tipe === 'whoosh') {
-                const bufferSize = audioCtx.sampleRate * 0.4; const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
-                const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
-                const filter = audioCtx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.setValueAtTime(200, audioCtx.currentTime); filter.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.15); filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.4);
-                const gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 0.1); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                noise.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination); noise.start(); return;
-            }
+            initAudioAman();
+            if(!audioCtx) return; // Kalau diblokir, tetap lanjut tanpa error
 
-            const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
-            osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-            
-            if(tipe === 'benar') { osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1318.51, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); osc.start(); osc.stop(audioCtx.currentTime + 0.5); } 
-            else if(tipe === 'salah') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3); osc.start(); osc.stop(audioCtx.currentTime + 0.3); } 
-            else if(tipe === 'menang') { osc.type = 'square'; osc.frequency.setValueAtTime(440, audioCtx.currentTime); osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.1); osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2); osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1); osc.start(); osc.stop(audioCtx.currentTime + 1); }
+            try {
+                if(tipe === 'whoosh') {
+                    const bufferSize = audioCtx.sampleRate * 0.4; const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+                    const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+                    const filter = audioCtx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.setValueAtTime(200, audioCtx.currentTime); filter.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.15); filter.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.4);
+                    const gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 0.1); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    noise.connect(filter); filter.connect(gainNode); gainNode.connect(audioCtx.destination); noise.start(); return;
+                }
+
+                const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
+                osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+                
+                if(tipe === 'benar') { osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1318.51, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); osc.start(); osc.stop(audioCtx.currentTime + 0.5); } 
+                else if(tipe === 'salah') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3); osc.start(); osc.stop(audioCtx.currentTime + 0.3); } 
+                else if(tipe === 'menang') { osc.type = 'square'; osc.frequency.setValueAtTime(440, audioCtx.currentTime); osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.1); osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2); osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1); osc.start(); osc.stop(audioCtx.currentTime + 1); }
+            } catch(e) { console.log("Gagal mutar SFX"); }
         }
 
-        // Deteksi sentuhan pertama di mana saja untuk menghidupkan BGM secara aman
-        document.body.addEventListener('click', pancingAudioBGM, { once: true });
-        document.body.addEventListener('touchstart', pancingAudioBGM, { once: true });
-
-        // --- 2. NAVIGASI LAYAR ---
+        // --- 2. NAVIGASI LAYAR AMAN ---
         function sembunyikanSemuaLayar() {
             document.getElementById('layar-menu-utama').style.display = 'none';
             document.getElementById('layar-materi').style.display = 'none';
@@ -229,8 +243,17 @@
             document.getElementById('area-game').style.display = 'none';
             document.getElementById('layar-leaderboard').style.display = 'none';
         }
-        function bukaLayar(idLayar) { pancingAudioBGM(); sembunyikanSemuaLayar(); document.getElementById(idLayar).style.display = 'flex'; if(idLayar === 'area-game') document.getElementById(idLayar).style.display = 'block'; }
-        function flipKartu(elemen) { pancingAudioBGM(); mainkanSuara('whoosh'); elemen.classList.toggle('is-flipped'); }
+        function bukaLayar(idLayar) { 
+            pancingBGM(); // Tiap klik menu, pastikan lagu nyala
+            sembunyikanSemuaLayar(); 
+            document.getElementById(idLayar).style.display = 'flex'; 
+            if(idLayar === 'area-game') document.getElementById(idLayar).style.display = 'block'; 
+        }
+        function flipKartu(elemen) { 
+            pancingBGM(); 
+            mainkanSuara('whoosh'); 
+            elemen.classList.toggle('is-flipped'); 
+        }
 
         // --- 3. LOGIKA GAME DRAG DROP ---
         let skorKota = { A: 0, B: 0, C: 0, D: 0 };

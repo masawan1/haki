@@ -18,9 +18,20 @@
         .btn-menu:active { transform: scale(0.95); }
         .btn-menu:hover { transform: scale(1.05); }
         .btn-menu span { font-size: 0.6em; color: #e2e8f0; font-weight: normal; text-align: center;}
+        
+        /* Warna Tombol Menu */
+        #btn-menu-tujuan { background: #1e1e2f; border-color: #43e97b; box-shadow: 0 10px 30px rgba(67, 233, 123, 0.3); }
         #btn-menu-materi { background: #1e1e2f; border-color: #f9d423; box-shadow: 0 10px 30px rgba(249, 212, 35, 0.3); }
         #btn-menu-drag { background: #1e1e2f; border-color: #00f2fe; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3); }
         #btn-menu-balap { background: #1e1e2f; border-color: #b224ef; box-shadow: 0 10px 30px rgba(178, 36, 239, 0.3); }
+
+        /* --- LAYAR TUJUAN PEMBELAJARAN --- */
+        #layar-tujuan { display: none; flex-direction: column; justify-content: flex-start; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1e1e2f; z-index: 900; padding: 40px; box-sizing: border-box; overflow-y: auto; }
+        .list-tujuan { display: flex; flex-direction: column; gap: 20px; width: 90%; max-width: 900px; text-align: left; margin-top: 20px;}
+        .item-tujuan { background: #252538; border-left: 8px solid #43e97b; padding: 25px 30px; border-radius: 0 20px 20px 0; display: flex; align-items: center; gap: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: 0.3s; }
+        .item-tujuan:hover { transform: translateX(15px); background: #2a2a40; border-color:#64ffda;}
+        .item-tujuan span { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #1e1e2f; font-size: 2.5em; font-weight: bold; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; border-radius: 50%; flex-shrink: 0; box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);}
+        .item-tujuan p { margin: 0; font-size: 1.5em; line-height: 1.4; color: #e2e8f0; }
 
         /* --- LAYAR MATERI --- */
         #layar-materi { display: none; flex-direction: column; justify-content: flex-start; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1e1e2f; z-index: 900; padding: 20px; box-sizing: border-box; overflow-y: auto; }
@@ -99,10 +110,37 @@
     <div id="layar-menu-utama">
         <div class="judul-menu">HAKI KREATOR HUB</div>
         <div class="menu-container">
+            <button class="btn-menu" id="btn-menu-tujuan" onclick="bukaLayar('layar-tujuan')">🎯 TUJUAN PEMBELAJARAN<span>(Kompetensi Siswa)</span></button>
             <button class="btn-menu" id="btn-menu-materi" onclick="bukaLayar('layar-materi')">📖 MATERI HAKI<span>(Buku Saku Digital)</span></button>
             <button class="btn-menu" id="btn-menu-drag" onclick="bukaLayar('layar-menu-kota')">🧩 GAME MISI<span>(Selesaikan 4 Kota)</span></button>
             <button class="btn-menu" id="btn-menu-balap" onclick="bukaLeaderboard()">🏆 KLASEMEN AKHIR<span>(Hasil 4 Kota)</span></button>
         </div>
+    </div>
+
+    <div id="layar-tujuan">
+        <h1 class="judul-materi" style="color: #43e97b;">TUJUAN PEMBELAJARAN</h1>
+        <p class="sub-materi">Setelah mengikuti sesi interaktif ini, Taruna/i diharapkan mampu:</p>
+        
+        <div class="list-tujuan">
+            <div class="item-tujuan">
+                <span>1</span>
+                <p>Memahami konsep dasar <b>Hak Atas Kekayaan Intelektual (HAKI)</b> dan pentingnya perlindungan karya cipta di industri digital dan kreatif.</p>
+            </div>
+            <div class="item-tujuan">
+                <span>2</span>
+                <p>Mengidentifikasi dan membedakan jenis-jenis HAKI (<b>Hak Cipta, Merek, Paten, Desain Industri, dan Rahasia Dagang</b>) dengan tepat.</p>
+            </div>
+            <div class="item-tujuan">
+                <span>3</span>
+                <p>Menganalisis secara kritis berbagai studi kasus nyata terkait pelanggaran HAKI di bidang <b>Informatika, Broadcasting, dan Konten Kreator</b>.</p>
+            </div>
+            <div class="item-tujuan">
+                <span>4</span>
+                <p>Menerapkan prinsip etika profesi dan lisensi digital <i>(Open Source/Creative Commons)</i> dalam memproduksi karya cipta yang orisinal.</p>
+            </div>
+        </div>
+
+        <button class="btn-navigasi-kecil" style="display:block; margin-top: 40px;" onclick="bukaLayar('layar-menu-utama')">⬅ Kembali ke Dashboard</button>
     </div>
 
     <div id="layar-materi">
@@ -176,7 +214,7 @@
                     elemenBGM.volume = 0.15;
                     elemenBGM.play().catch(e => console.log("Menunggu klik pengguna"));
                 }
-            } catch(e) {} // Abaikan kalau gagal biar nggak macet
+            } catch(e) {} 
         }
 
         function toggleMusik() {
@@ -226,6 +264,7 @@
         // --- 2. NAVIGASI LAYAR YANG PASTI JALAN ---
         function sembunyikanSemuaLayar() {
             document.getElementById('layar-menu-utama').style.display = 'none';
+            document.getElementById('layar-tujuan').style.display = 'none';
             document.getElementById('layar-materi').style.display = 'none';
             document.getElementById('layar-menu-kota').style.display = 'none';
             document.getElementById('area-game').style.display = 'none';
@@ -233,12 +272,9 @@
         }
         
         function bukaLayar(idLayar) { 
-            // 1. PINDAH LAYAR DULU (HARUS BERHASIL)
             sembunyikanSemuaLayar(); 
             document.getElementById(idLayar).style.display = 'flex'; 
             if(idLayar === 'area-game') document.getElementById(idLayar).style.display = 'block'; 
-            
-            // 2. BARU PANCING AUDIO
             pancingBGM();
         }
 

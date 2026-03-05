@@ -82,7 +82,6 @@
         .btn-navigasi-kecil { margin-top: 20px; background: transparent; color: #a8b2d1; border: 2px solid #a8b2d1; padding: 15px 40px; font-size: 1.5em; border-radius: 15px; cursor: pointer; transition: 0.3s; z-index: 1001;}
         .btn-navigasi-kecil:hover { background: #a8b2d1; color: #1e1e2f; }
         
-        /* TOMBOL KONTROL MUSIK POJOK KANAN BAWAH */
         #btn-kontrol-musik { position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: rgba(30, 30, 47, 0.9); color: #a8b2d1; border: 2px solid #a8b2d1; padding: 10px 20px; font-size: 1.2em; border-radius: 15px; cursor: pointer; transition: 0.3s; font-weight: bold;}
         #btn-kontrol-musik:hover { background: #a8b2d1; color: #1e1e2f; }
 
@@ -123,7 +122,7 @@
     <div id="layar-menu-kota">
         <div class="judul-menu">PILIH MISI DRAG & DROP</div>
         <div class="grid-kota">
-            <button class="btn-kota" id="btn-kota-tutorial" onclick="mulaiGameDrag('CONTOH')">🎓 KOTA TUTORIAL <span>(Khusus Guru Memberi Contoh - Tidak Masuk Poin)</span></button>
+            <button class="btn-kota" id="btn-kota-tutorial" onclick="mulaiGameDrag('CONTOH')">🎓 KOTA TUTORIAL <span>(Khusus Guru Memberi Contoh)</span></button>
             <button class="btn-kota" id="btn-kota-a" onclick="mulaiGameDrag('A')">KOTA A <span>(Kelompok Software)</span></button>
             <button class="btn-kota" id="btn-kota-b" onclick="mulaiGameDrag('B')">KOTA B <span>(Kelompok Film)</span></button>
             <button class="btn-kota" id="btn-kota-c" onclick="mulaiGameDrag('C')">KOTA C <span>(Kelompok AI)</span></button>
@@ -166,57 +165,46 @@
     </div>
 
     <script>
-        // --- 1. SISTEM AUDIO ANTI-NGEBUG ---
-        let audioCtx = null;
+        // --- 1. SISTEM AUDIO YANG DILINDUNGI ---
         let isMutedByUser = false;
+        let audioCtx = null;
 
-        // Inisiasi mesin audio (Hanya jalan kalau aman)
-        function initAudioAman() {
+        function pancingBGM() {
+            try {
+                let elemenBGM = document.getElementById('musik-bgm');
+                if (elemenBGM && elemenBGM.paused && !isMutedByUser) {
+                    elemenBGM.volume = 0.15;
+                    elemenBGM.play().catch(e => console.log("Menunggu klik pengguna"));
+                }
+            } catch(e) {} // Abaikan kalau gagal biar nggak macet
+        }
+
+        function toggleMusik() {
+            try {
+                let elemenBGM = document.getElementById('musik-bgm');
+                let btn = document.getElementById('btn-kontrol-musik');
+                if (!elemenBGM) return;
+
+                if (!isMutedByUser) {
+                    elemenBGM.pause();
+                    isMutedByUser = true;
+                    btn.innerText = "🔇 Nyalakan BGM";
+                } else {
+                    isMutedByUser = false;
+                    elemenBGM.play().catch(e => console.log(e));
+                    btn.innerText = "🔊 Matikan BGM";
+                }
+            } catch(e) {}
+        }
+
+        function mainkanSuara(tipe) {
             try {
                 if (!audioCtx) {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     audioCtx = new AudioContext();
                 }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-            } catch (e) {
-                console.log("Audio SFX dimatikan sementara oleh browser.");
-            }
-        }
-
-        // Pancing musik BGM dengan aman
-        function pancingBGM() {
-            let elemenBGM = document.getElementById('musik-bgm');
-            elemenBGM.volume = 0.15;
-            if (elemenBGM.paused && !isMutedByUser) {
-                let janjiMain = elemenBGM.play();
-                if (janjiMain !== undefined) {
-                    janjiMain.catch(error => { console.log("BGM menunggu klik."); });
-                }
-            }
-        }
-
-        function toggleMusik() {
-            let elemenBGM = document.getElementById('musik-bgm');
-            let btn = document.getElementById('btn-kontrol-musik');
-            
-            if (!isMutedByUser) {
-                elemenBGM.pause();
-                isMutedByUser = true;
-                btn.innerText = "🔇 Nyalakan BGM";
-            } else {
-                isMutedByUser = false;
-                elemenBGM.play().catch(e => console.log(e));
-                btn.innerText = "🔊 Matikan BGM";
-            }
-        }
-
-        function mainkanSuara(tipe) {
-            initAudioAman();
-            if(!audioCtx) return; // Kalau diblokir, tetap lanjut tanpa error
-
-            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
                 if(tipe === 'whoosh') {
                     const bufferSize = audioCtx.sampleRate * 0.4; const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                     const data = buffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
@@ -232,10 +220,10 @@
                 if(tipe === 'benar') { osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1318.51, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); osc.start(); osc.stop(audioCtx.currentTime + 0.5); } 
                 else if(tipe === 'salah') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3); osc.start(); osc.stop(audioCtx.currentTime + 0.3); } 
                 else if(tipe === 'menang') { osc.type = 'square'; osc.frequency.setValueAtTime(440, audioCtx.currentTime); osc.frequency.setValueAtTime(554.37, audioCtx.currentTime + 0.1); osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2); osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1); osc.start(); osc.stop(audioCtx.currentTime + 1); }
-            } catch(e) { console.log("Gagal mutar SFX"); }
+            } catch(e) {}
         }
 
-        // --- 2. NAVIGASI LAYAR AMAN ---
+        // --- 2. NAVIGASI LAYAR YANG PASTI JALAN ---
         function sembunyikanSemuaLayar() {
             document.getElementById('layar-menu-utama').style.display = 'none';
             document.getElementById('layar-materi').style.display = 'none';
@@ -243,16 +231,21 @@
             document.getElementById('area-game').style.display = 'none';
             document.getElementById('layar-leaderboard').style.display = 'none';
         }
+        
         function bukaLayar(idLayar) { 
-            pancingBGM(); // Tiap klik menu, pastikan lagu nyala
+            // 1. PINDAH LAYAR DULU (HARUS BERHASIL)
             sembunyikanSemuaLayar(); 
             document.getElementById(idLayar).style.display = 'flex'; 
             if(idLayar === 'area-game') document.getElementById(idLayar).style.display = 'block'; 
+            
+            // 2. BARU PANCING AUDIO
+            pancingBGM();
         }
+
         function flipKartu(elemen) { 
+            elemen.classList.toggle('is-flipped'); 
             pancingBGM(); 
             mainkanSuara('whoosh'); 
-            elemen.classList.toggle('is-flipped'); 
         }
 
         // --- 3. LOGIKA GAME DRAG DROP ---
